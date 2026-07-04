@@ -1133,19 +1133,11 @@ function saveActiveIpalState(){
   if(codEl)  ipal.COD   = codEl.value || '';
   if(mlvssEl)ipal.MLVSS = mlvssEl.value || '';
   if(pffEl)  ipal.peakFF= pffEl.value || '1,5';
-  // Persist ALL unit inputs — dims + every possible param field
-  const ALL_PARAMS = ['P','L','T','D',
-    'v_aliran','hrt_menit','hrt_jam','hrt_hari','slr','hazen','proj_area','olr',
-    'fm','sor','sor_pk','la','ll','ft','vf','wk','flux','bod_loading','bod_loading_vol',
-    'nh3_loading','media_pct','media_vol','surface_area','slr_surf','rasio_pl',
-    'bed_slope','cs_loading'];
+  // Persist ALL unit inputs — use shared constant so list stays in sync
   ipal.units.forEach(u=>{
-    ALL_PARAMS.forEach(p=>{
+    ALL_UNIT_PARAMS.forEach(p=>{
       const el = document.getElementById(`u${u.id}_${p}`);
-      if(el !== null) {
-        const val = el.tagName==='SELECT' ? el.value : el.value;
-        u['_'+p] = val;
-      }
+      if(el !== null) u['_'+p] = el.value;
     });
   });
 }
@@ -1201,6 +1193,37 @@ function captureUnitInputs(){
       if(el !== null) u['_'+p] = el.value;
     });
   });
+}
+
+// Full flush of active IPAL DOM → object before any save/export.
+// Non-active IPALs already have their data stored from last switchIpal() call.
+// This ensures ZERO data loss regardless of which tab is active.
+function captureAllIpalStates(){
+  // 1. Capture top-level fields (Q, BOD, COD, etc.) for active IPAL
+  const ipal = getActiveIpal();
+  if(ipal){
+    const tipeEl = document.getElementById('ipalType');
+    const qEl    = document.getElementById('qTotal');
+    const bodEl  = document.getElementById('bodIn');
+    const codEl  = document.getElementById('codIn');
+    const mlvssEl= document.getElementById('mlvssG');
+    const pffEl  = document.getElementById('peakFF');
+    if(tipeEl)  ipal.tipe   = tipeEl.value  || 'buang';
+    if(qEl)     ipal.Q      = qEl.value     || '';
+    if(bodEl)   ipal.BOD    = bodEl.value   || '';
+    if(codEl)   ipal.COD    = codEl.value   || '';
+    if(mlvssEl) ipal.MLVSS  = mlvssEl.value || '';
+    if(pffEl)   ipal.peakFF = pffEl.value   || '1,5';
+    // 2. Capture ALL unit params from DOM for active IPAL
+    ipal.units.forEach(u=>{
+      ALL_UNIT_PARAMS.forEach(p=>{
+        const el = document.getElementById(`u${u.id}_${p}`);
+        if(el !== null) u['_'+p] = el.value;
+      });
+    });
+  }
+  // Non-active IPALs: their data was already committed to the ipals[] array
+  // the last time switchIpal() was called, so no further DOM read needed.
 }
 
 function addUnit(){
@@ -1490,20 +1513,8 @@ function runCheck(){
 
 // ── SAVE / OPEN FILE ───────────────────────────────
 function saveFile(){
-  saveActiveIpalState();
-  // Collect full dimension values for each IPAL's units from DOM
-  ipals.forEach(ipal=>{
-    ipal.units.forEach(u=>{
-      const get = id => document.getElementById(`u${u.id}_${id}`)?.value || '';
-      if(u.shape==='kotak'){ u._P=get('P'); u._L=get('L'); u._T=get('T'); }
-      else { u._D=get('D'); u._T=get('T'); }
-      // Save named params
-      ['proj_area','la','ll','ft'].forEach(p=>{
-        const el=document.getElementById(`u${u.id}_${p}`);
-        if(el) u['_'+p] = el.tagName==='SELECT'?el.value:el.value;
-      });
-    });
-  });
+  // Flush ALL current DOM inputs into ipals[] before serialising
+  captureAllIpalStates();
   const payload = {
     version: '1.0',
     saved: new Date().toISOString(),
@@ -1516,8 +1527,10 @@ function saveFile(){
   a.href     = url;
   const d    = new Date().toISOString().slice(0,10).replace(/-/g,'');
   a.download = `IPAL_Checker_${d}.ipal`;
+  a.style.display = 'none';
+  document.body.appendChild(a);
   a.click();
-  URL.revokeObjectURL(url);
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
 }
 
 function openFile(){
@@ -1554,14 +1567,9 @@ function openFile(){
 
 function restoreUnitDims(){
   const ipal = getActiveIpal(); if(!ipal) return;
-  const ALL_PARAMS = ['P','L','T','D',
-    'v_aliran','hrt_menit','hrt_jam','hrt_hari','slr','hazen','proj_area','olr',
-    'fm','sor','sor_pk','la','ll','ft','vf','wk','flux','bod_loading','bod_loading_vol',
-    'nh3_loading','media_pct','media_vol','surface_area','slr_surf','rasio_pl',
-    'bed_slope','cs_loading'];
   setTimeout(()=>{
     ipal.units.forEach(u=>{
-      ALL_PARAMS.forEach(p=>{
+      ALL_UNIT_PARAMS.forEach(p=>{
         const val = u['_'+p];
         if(val === undefined || val === null) return;
         const el = document.getElementById(`u${u.id}_${p}`);
@@ -1744,22 +1752,21 @@ function doAutosave(){
 }
 function tryRestoreAutosave(){
   let raw;
-  try{ raw = localStorage.getItem(AUTOSAVE_KEY); }catch(e){ return; }
-  if(!raw) return;
+  try{ raw = localStorage.getItem(AUTOSAVE_KEY); }catch(e){ return false; }
+  if(!raw) return false;
   try{
     const data = JSON.parse(raw);
-    if(!data.ipals || !Array.isArray(data.ipals) || !data.ipals.length) return;
-    const savedAt = data.saved ? new Date(data.saved).toLocaleString('id-ID') : 'sebelumnya';
-    if(confirm(`Ditemukan data yang belum tersimpan dari sesi ${savedAt}.\nPulihkan data tersebut?`)){
-      ipals = data.ipals;
-      ipalCounter = Math.max(...ipals.map(x=>x.id), 0);
-      activeIpalId = data.activeIpalId || ipals[0]?.id;
-      renderIpalTabs();
-      loadActiveIpalState();
-      restoreUnitDims();
-      updateSummary();
-    }
-  }catch(e){ /* corrupted autosave; ignore */ }
+    if(!data.ipals || !Array.isArray(data.ipals) || !data.ipals.length) return false;
+    // Silently restore — no confirm dialog. Data is always preserved.
+    ipals = data.ipals;
+    ipalCounter = Math.max(...ipals.map(x=>x.id), 0);
+    activeIpalId = data.activeIpalId || ipals[0]?.id;
+    renderIpalTabs();
+    loadActiveIpalState();
+    restoreUnitDims();
+    updateSummary();
+    return true;
+  }catch(e){ return false; /* corrupted autosave; ignore */ }
 }
 // Debounced autosave on any input/change anywhere in the app
 document.addEventListener('input', scheduleAutosave, true);
@@ -1768,13 +1775,16 @@ window.addEventListener('beforeunload', doAutosave);
 
 // ── INIT ───────────────────────────────────────────
 function init(){
-  const first = newIpal('IPAL 1');
-  ipals.push(first);
-  activeIpalId = first.id;
-  renderIpalTabs();
-  loadActiveIpalState();
-  updateSummary();
-  tryRestoreAutosave();
+  // Try to restore from autosave first; only create blank IPAL if nothing saved
+  const restored = tryRestoreAutosave();
+  if(!restored){
+    const first = newIpal('IPAL 1');
+    ipals.push(first);
+    activeIpalId = first.id;
+    renderIpalTabs();
+    loadActiveIpalState();
+    updateSummary();
+  }
 }
 
 init();
@@ -35557,8 +35567,7 @@ function gatherReportData() {
       dims.T = parseID(document.getElementById(`u${u.id}_T`)?.value);
     }
     const params = {};
-    ['v_aliran','hrt_menit','hrt_jam','slr','hazen','proj_area','olr',
-     'fm','sor','sor_pk','la','ll','ft','vf','wk'].forEach(p => {
+    ALL_UNIT_PARAMS.forEach(p => {
       const el = document.getElementById(`u${u.id}_${p}`);
       if (el) params[p] = el.tagName === 'SELECT' ? el.value : parseID(el.value);
     });
@@ -35570,7 +35579,9 @@ function gatherReportData() {
 }
 
 async function exportWord() {
-  saveActiveIpalState();
+  // Flush ALL current DOM inputs before building the report
+  captureAllIpalStates();
+  doAutosave(); // keep localStorage in sync
   const btn    = document.getElementById('btnExport');
   const status = document.getElementById('exportStatus');
   btn.disabled = true;
@@ -35592,8 +35603,10 @@ async function exportWord() {
     a.href = url;
     const d = new Date().toISOString().slice(0,10).replace(/-/g,'');
     a.download = `Laporan_IPAL_Checker_${d}.docx`;
+    a.style.display = 'none';
+    document.body.appendChild(a);
     a.click();
-    URL.revokeObjectURL(url);
+    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
     status.textContent = '✓ File berhasil diunduh.';
     setTimeout(() => { status.textContent = ''; }, 4000);
   } catch(e) {
