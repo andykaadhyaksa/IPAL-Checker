@@ -1043,7 +1043,7 @@ const FIELDS={
   sbr:[{id:'fm',l:'F/M Ratio',u:'kg BOD/kg MLVSS.hari',type:'auto'},{id:'hrt_jam',l:'HRT per siklus',u:'jam',type:'auto'}],
   mbr:[{id:'flux',l:'Flux Membran',u:'liter/m².jam',type:'input',ph:'25'},{id:'hrt_jam',l:'HRT',u:'jam',type:'auto'}],
   mbbr:[{id:'media_vol',l:'Volume Media',u:'m³',type:'input',ph:'1,00',hint:'Volume total media di reaktor'},{id:'bod_loading',l:'BOD Loading Rate',u:'g BOD/m².hari',type:'input',ph:'15'},{id:'nh3_loading',l:'Nitrogen Loading Rate',u:'g NH₃-N/m².hari',type:'input',ph:'0,5'},{id:'media_pct',l:'% Volume Media / Volume Reaktor',u:'%',type:'input',ph:'50',hint:'Maks 70%'}],
-  biofilter:[{id:'bod_loading_vol',l:'BOD Loading Rate',u:'kg BOD/m³-media/hari',type:'input',ph:'1,5'},{id:'surface_area',l:'Luas Permukaan Spesifik Media',u:'m²/m³',type:'input',ph:'200',hint:'Min 150 m²/m³'}],
+  biofilter:[{id:'bod_loading_vol',l:'BOD Loading Rate',u:'kg BOD/m³-media/hari',type:'auto'},{id:'surface_area',l:'Luas Permukaan Spesifik Media',u:'m²/m³',type:'input',ph:'200',hint:'Min 150 m²/m³'}],
   pond_anaerobic:[{id:'olr',l:'VLR',u:'kg BOD/m³.hari',type:'auto'},{id:'hrt_hari',l:'HRT',u:'hari',type:'auto'},{id:'rasio_pl',l:'Rasio Panjang/Lebar',u:'',type:'input',ph:'2'}],
   pond_facultative:[{id:'slr_surf',l:'Organic Surface Loading Rate',u:'kg BOD/hektar.hari',type:'input',ph:'280'},{id:'hrt_hari',l:'HRT',u:'hari',type:'auto'},{id:'rasio_pl',l:'Rasio Panjang/Lebar',u:'',type:'input',ph:'3'}],
   pond_maturation:[{id:'hrt_hari',l:'HRT',u:'hari',type:'auto'}],
@@ -1344,6 +1344,7 @@ function autoCalc(uid){
     case 'presed_konv': sa('slr',slr,3); sa('hrt_jam',hrt_jam,2); break;
     case 'presed_lamella':{ const pa=parseID(document.getElementById(`u${uid}_proj_area`)?.value); sa('hazen',(!isNaN(pa)&&pa>0&&Qh)?Qh/pa:NaN,3); sa('hrt_menit',hrt_min,1); break;}
     case 'anaerobic': sa('olr',(vol&&!isNaN(Q)&&!isNaN(BOD))?(Q*BOD/1000)/vol:NaN,3); sa('hrt_jam',hrt_jam,2); break;
+    case 'biofilter': sa('bod_loading_vol',(vol&&!isNaN(Q)&&!isNaN(BOD))?(Q*BOD/1000)/vol:NaN,3); break;
     case 'aerobic': sa('fm',(vol&&!isNaN(Q)&&!isNaN(BOD)&&!isNaN(MLVSS)&&MLVSS>0)?(Q*BOD)/(MLVSS*vol):NaN,4); sa('hrt_jam',hrt_jam,2); break;
     case 'secondary_clarifier': sa('sor',slr,3); sa('sor_pk',(slr&&!isNaN(pff))?slr*pff:NaN,3); sa('hrt_jam',hrt_jam,2); break;
     case 'secondary_clarifier_lamella':{ const pa=parseID(document.getElementById(`u${uid}_proj_area`)?.value); sa('sor',(!isNaN(pa)&&pa>0&&Qh)?Qh/pa:NaN,3); break;}
