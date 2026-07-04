@@ -1128,22 +1128,19 @@ function saveActiveIpalState(){
   if(codEl)  ipal.COD   = codEl.value || '';
   if(mlvssEl)ipal.MLVSS = mlvssEl.value || '';
   if(pffEl)  ipal.peakFF= pffEl.value || '1,5';
-  // Persist unit dimension inputs too, so switching menus never drops them
+  // Persist ALL unit inputs — dims + every possible param field
+  const ALL_PARAMS = ['P','L','T','D',
+    'v_aliran','hrt_menit','hrt_jam','hrt_hari','slr','hazen','proj_area','olr',
+    'fm','sor','sor_pk','la','ll','ft','vf','wk','flux','bod_loading','bod_loading_vol',
+    'nh3_loading','media_pct','media_vol','surface_area','slr_surf','rasio_pl',
+    'bed_slope','cs_loading'];
   ipal.units.forEach(u=>{
-    const get = id => document.getElementById(`u${u.id}_${id}`)?.value;
-    if(u.shape==='kotak'){
-      const P=get('P'), L=get('L'), T=get('T');
-      if(P!==undefined) u._P=P;
-      if(L!==undefined) u._L=L;
-      if(T!==undefined) u._T=T;
-    }else{
-      const D=get('D'), T=get('T');
-      if(D!==undefined) u._D=D;
-      if(T!==undefined) u._T=T;
-    }
-    ['proj_area','la','ll','ft'].forEach(p=>{
-      const el=document.getElementById(`u${u.id}_${p}`);
-      if(el) u['_'+p] = el.tagName==='SELECT'?el.value:el.value;
+    ALL_PARAMS.forEach(p=>{
+      const el = document.getElementById(`u${u.id}_${p}`);
+      if(el !== null) {
+        const val = el.tagName==='SELECT' ? el.value : el.value;
+        u['_'+p] = val;
+      }
     });
   });
 }
@@ -1377,14 +1374,23 @@ function fmtCr(cr){
   return '—';
 }
 function getPV(uid,p,u){
-  if(p==='kedalaman')return parseID(document.getElementById(`u${uid}_T`)?.value);
+  // Helper: read from DOM first, fallback to saved state
+  const domOrSaved = (param) => {
+    const el = document.getElementById(`u${uid}_${param}`);
+    if(el) return parseID(el.value);
+    // Fallback to saved state
+    const saved = u['_'+param];
+    return saved !== undefined ? parseID(saved) : NaN;
+  };
+  if(p==='kedalaman') return domOrSaved('T');
   if(u.type==='filtrasi'){
-    const ft=document.getElementById(`u${uid}_ft`)?.value;
+    const el = document.getElementById(`u${uid}_ft`);
+    const ft = el ? el.value : (u._ft || 'lambat');
     const mp={vl:'lambat',vc:'cepat',vt:'bertekanan'};
     if(mp[p]&&mp[p]!==ft)return NaN;
-    if(mp[p])return parseID(document.getElementById(`u${uid}_vf`)?.value);
+    if(mp[p]) return domOrSaved('vf');
   }
-  return parseID(document.getElementById(`u${uid}_${p}`)?.value);
+  return domOrSaved(p);
 }
 
 function runCheck(){
@@ -1508,25 +1514,22 @@ function openFile(){
 
 function restoreUnitDims(){
   const ipal = getActiveIpal(); if(!ipal) return;
+  const ALL_PARAMS = ['P','L','T','D',
+    'v_aliran','hrt_menit','hrt_jam','hrt_hari','slr','hazen','proj_area','olr',
+    'fm','sor','sor_pk','la','ll','ft','vf','wk','flux','bod_loading','bod_loading_vol',
+    'nh3_loading','media_pct','media_vol','surface_area','slr_surf','rasio_pl',
+    'bed_slope','cs_loading'];
   setTimeout(()=>{
     ipal.units.forEach(u=>{
-      const set = (id, val) => {
-        const el=document.getElementById(`u${u.id}_${id}`);
-        if(el && val!==undefined && val!==null) el.value=val;
-      };
-      if(u.shape==='kotak'){ set('P',u._P); set('L',u._L); set('T',u._T); }
-      else { set('D',u._D); set('T',u._T); }
-      // restore all named params
-      const namedParams = ['proj_area','la','ll','ft'];
-      namedParams.forEach(p=>{
-        if(u['_'+p]!==undefined){
-          const el=document.getElementById(`u${u.id}_${p}`);
-          if(el) el.value = u['_'+p];
-        }
+      ALL_PARAMS.forEach(p=>{
+        const val = u['_'+p];
+        if(val === undefined || val === null) return;
+        const el = document.getElementById(`u${u.id}_${p}`);
+        if(el) el.value = val;
       });
-      // recalculate after restoring
       calcVol(u.id);
     });
+    if(typeof updateSummary==='function') updateSummary();
   }, 50);
 }
 
