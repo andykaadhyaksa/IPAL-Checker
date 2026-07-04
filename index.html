@@ -719,6 +719,9 @@ footer{text-align:center;padding:26px 20px;font-size:.72rem;color:var(--faint);b
 <footer>IPAL Checker v1.2 &nbsp;|&nbsp; Permen LH/BPLH No. 11 Tahun 2025 — Lampiran III &nbsp;|&nbsp; Format: titik (.) ribuan · koma (,) desimal</footer>
 
 <script>
+// ── DAFTAR HALAMAN (dibutuhkan oleh showPage) ────────
+const PAGES = ['dashboard','data','hitung','hasil','laporan','referensi','pengaturan'];
+
 // ── FORMAT ANGKA INDONESIA ──────────────────────────
 function parseID(s){
   if(s===null||s===undefined||s==='')return NaN;
@@ -1101,8 +1104,10 @@ function switchIpal(id){
   activeIpalId = id;
   renderIpalTabs();
   loadActiveIpalState();
-  document.getElementById('results').style.display='none';
-  document.getElementById('exportArea').style.display='none';
+  const resultsEl2 = document.getElementById('results');
+  if(resultsEl2) resultsEl2.style.display='none';
+  const exportAreaEl2 = document.getElementById('exportArea');
+  if(exportAreaEl2) exportAreaEl2.style.display='none';
   if(typeof updateSummary==='function') updateSummary();
 }
 
@@ -1534,8 +1539,10 @@ function openFile(){
         loadActiveIpalState();
         // Restore dims for each unit of active IPAL
         restoreUnitDims();
-        document.getElementById('results').style.display='none';
-        document.getElementById('exportArea').style.display='none';
+        const resultsEl = document.getElementById('results');
+        if(resultsEl) resultsEl.style.display='none';
+        const exportAreaEl = document.getElementById('exportArea');
+        if(exportAreaEl) exportAreaEl.style.display='none';
       } catch(err){
         alert('Gagal membuka file: ' + err.message);
       }
