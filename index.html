@@ -35018,7 +35018,7 @@ const C = {
 // ── TEXT / PARA BUILDERS ────────────────────────────────────────────────────
 const tx = (text, opts = {}) => new TextRun({
   text: String(text), bold: opts.bold||false, italics: opts.italic||false,
-  color: opts.color||'222222', size: opts.size||20, font: opts.font||'Calibri',
+  color: opts.color||'222222', size: opts.size||20, font: opts.font||'Times New Roman',
   underline: opts.underline ? {} : undefined,
 });
 const mono = (text, opts = {}) => new TextRun({
@@ -35041,7 +35041,7 @@ const gap = (sp = 80) => new Paragraph({ children: [tx('')], spacing: { before: 
 // ── SECTION HEADINGS ────────────────────────────────────────────────────────
 function h1(text) {
   return new Paragraph({
-    children: [tx(text, { bold: true, size: 28, color: '000000', font: 'Calibri' })],
+    children: [tx(text, { bold: true, size: 28, color: '000000', font: 'Times New Roman' })],
     heading: HeadingLevel.HEADING_1,
     spacing: { before: 0, after: 160 },
     border: { bottom: { style: BorderStyle.SINGLE, size: 8, color: '000000' } },
@@ -35049,7 +35049,7 @@ function h1(text) {
 }
 function h2(text) {
   return new Paragraph({
-    children: [tx(text, { bold: true, size: 24, color: '000000', font: 'Calibri' })],
+    children: [tx(text, { bold: true, size: 24, color: '000000', font: 'Times New Roman' })],
     heading: HeadingLevel.HEADING_2,
     spacing: { before: 280, after: 120 },
     border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: '000000' } },
@@ -35067,7 +35067,7 @@ function h3(text, seq) {
 }
 function secLabel(text) {
   return new Paragraph({
-    children: [tx(text, { bold: true, size: 18, color: C.tealPale === 'EEEEEE' ? C.teal : C.teal, font: 'Calibri' })],
+    children: [tx(text, { bold: true, size: 18, color: C.tealPale === 'EEEEEE' ? C.teal : C.teal, font: 'Times New Roman' })],
     spacing: { before: 160, after: 60 },
     border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: C.borderLight } },
     shading: { type: ShadingType.CLEAR, fill: 'FFFFFF' },
@@ -35092,7 +35092,7 @@ function eqBlock(label, steps) {
     // Note — italic gray
     if (step.note) {
       elems.push(new Paragraph({
-        children: [tx(step.note, { size: 17, color: '555555', italic: true })],
+        children: [tx(step.note, { size: 17, color: '555555' })],
         spacing: { before: 20, after: 20 },
       }));
     }
@@ -35143,11 +35143,11 @@ function resultTable(rows) {
     const icon = r.status === 'pass' ? '✓' : r.status === 'fail' ? '✗' : '—';
     const statusLabel = r.status === 'pass' ? 'Sesuai' : r.status === 'fail' ? 'Tidak Sesuai' : 'Perlu Cek';
     const cells = [
-      { text: r.param, color: C.navy, bold: true, align: AlignmentType.LEFT, font: 'Calibri', size: 18 },
+      { text: r.param, color: C.navy, bold: true, align: AlignmentType.LEFT, font: 'Times New Roman', size: 18 },
       { text: fmtS(r.nilai, r.dec||3), color: C.navyMid, bold: true, align: AlignmentType.CENTER, font: 'Courier New', size: 18 },
-      { text: r.satuan, color: C.subText, bold: false, align: AlignmentType.CENTER, font: 'Calibri', size: 17 },
-      { text: r.kriteria, color: C.subText, bold: false, align: AlignmentType.LEFT, font: 'Calibri', size: 17 },
-      { text: `${icon} ${statusLabel}`, color: tc, bold: true, align: AlignmentType.CENTER, font: 'Calibri', size: 17 },
+      { text: r.satuan, color: C.subText, bold: false, align: AlignmentType.CENTER, font: 'Times New Roman', size: 17 },
+      { text: r.kriteria, color: C.subText, bold: false, align: AlignmentType.LEFT, font: 'Times New Roman', size: 17 },
+      { text: `${icon} ${statusLabel}`, color: tc, bold: true, align: AlignmentType.CENTER, font: 'Times New Roman', size: 17 },
     ];
     return new TableRow({
       children: cells.map((c, i) => new TableCell({
@@ -35204,19 +35204,19 @@ function buildUnitSection(u, tipe, Q, BOD, MLVSS, peakFF) {
   // Dimension info line
   // Dimensi — vertical list
   if (u.shape === 'kotak') {
-    elems.push(p([tx('Bentuk: Persegi Panjang', { size: 18, color: C.subText, italic: true })], { before: 0, after: 40 }));
+    elems.push(p([tx('Bentuk: Persegi Panjang', { size: 18, color: C.subText })], { before: 0, after: 40 }));
     const dimPairs = [['Panjang (P)', fmtS(u.dims.P,2)+' m'], ['Lebar (L)', fmtS(u.dims.L,2)+' m'], ['Tinggi (T)', fmtS(u.dims.T,2)+' m']];
     dimPairs.forEach(([k,v]) => elems.push(new Paragraph({
-      children: [new TextRun({text: k, font:'Calibri', size:18, color:C.subText, italics:true}),
+      children: [new TextRun({text: k, font:'Times New Roman', size:18, color:C.subText}),
                  new TextRun({text: '  =  ' + v, font:'Courier New', size:18, color:'000000'})],
       indent: { left: 400 }, spacing: { before:0, after:20 },
     })));
     elems.push(gap(60));
   } else {
-    elems.push(p([tx('Bentuk: Tabung/Dome', { size: 18, color: C.subText, italic: true })], { before: 0, after: 40 }));
+    elems.push(p([tx('Bentuk: Tabung/Dome', { size: 18, color: C.subText })], { before: 0, after: 40 }));
     const dimPairs = [['Diameter (D)', fmtS(u.dims.D,2)+' m'], ['Tinggi (T)', fmtS(u.dims.T,2)+' m']];
     dimPairs.forEach(([k,v]) => elems.push(new Paragraph({
-      children: [new TextRun({text: k, font:'Calibri', size:18, color:C.subText, italics:true}),
+      children: [new TextRun({text: k, font:'Times New Roman', size:18, color:C.subText}),
                  new TextRun({text: '  =  ' + v, font:'Courier New', size:18, color:'000000'})],
       indent: { left: 400 }, spacing: { before:0, after:20 },
     })));
@@ -35236,8 +35236,8 @@ function buildUnitSection(u, tipe, Q, BOD, MLVSS, peakFF) {
   } else {
     const D = u.dims.D, T = u.dims.T;
     volBlocks.push(eqBlock('Volume Efektif (V)', [
-      { note: 'Rumus umum — tabung/dome:', eq: [mr('V'), mr('  =  '), mr('π'), mr(' × '), frac([mr('D')], [mr('2')]), sup([''], ['2']), mr(' × '), mr('T')] },
-      { note: 'Substitusi nilai:', eq: [mr('V'), mr('  =  '), mr('3,14159'), mr(' × '), frac([mr(`${fmtS(D,2)}`)], [mr('2')]), sup([''], ['2']), mr(' × '), mr(`${fmtS(T,2)}`)] },
+      { note: 'Rumus umum — tabung/dome:', eq: [mr('V'), mr('  =  '), mr('π'), mr(' × '), new MathSuperScript({ children: [frac([mr('D')], [mr('2')])], superScript: [mr('2')] }), mr(' × '), mr('T')] },
+      { note: 'Substitusi nilai:', eq: [mr('V'), mr('  =  '), mr('3,14159'), mr(' × '), new MathSuperScript({ children: [frac([mr(`${fmtS(D,2)}`)], [mr('2')])], superScript: [mr('2')] }), mr(' × '), mr(`${fmtS(T,2)}`)] },
       { isResult: true, eq: [mr('V'), mr('  =  '), mr(`${fmtS(vol,3)} m³`)] },
     ]));
   }
@@ -35254,8 +35254,8 @@ function buildUnitSection(u, tipe, Q, BOD, MLVSS, peakFF) {
     } else {
       const D = u.dims.D;
       volBlocks.push(eqBlock('Luas Permukaan (A)', [
-        { note: 'Rumus umum:', eq: [mr('A'), mr('  =  '), mr('π'), mr(' × '), frac([mr('D')], [mr('2')]), sup([''], ['2'])] },
-        { note: 'Substitusi nilai:', eq: [mr('A'), mr('  =  '), mr('3,14159'), mr(' × '), frac([mr(`${fmtS(D,2)}`)], [mr('2')]), sup([''], ['2'])] },
+        { note: 'Rumus umum:', eq: [mr('A'), mr('  =  '), mr('π'), mr(' × '), new MathSuperScript({ children: [frac([mr('D')], [mr('2')])], superScript: [mr('2')] })] },
+        { note: 'Substitusi nilai:', eq: [mr('A'), mr('  =  '), mr('3,14159'), mr(' × '), new MathSuperScript({ children: [frac([mr(`${fmtS(D,2)}`)], [mr('2')])], superScript: [mr('2')] })] },
         { isResult: true, eq: [mr('A'), mr('  =  '), mr(`${fmtS(area,3)} m²`)] },
       ]));
     }
@@ -35431,7 +35431,53 @@ function buildUnitSection(u, tipe, Q, BOD, MLVSS, peakFF) {
     elems.push(secLabel('B.  Hasil Verifikasi terhadap Kriteria Permen LH No. 11 Tahun 2025'));
     elems.push(gap(60));
     elems.push(resultTable(resRows));
-    elems.push(gap(120));
+    elems.push(gap(80));
+
+    // ── Narasi hasil verifikasi ──
+    const passN = resRows.filter(r => r.status === 'pass').length;
+    const failN = resRows.filter(r => r.status === 'fail').length;
+    const naN   = resRows.filter(r => r.status === 'na').length;
+    const totalChecked = passN + failN;
+
+    let narasiText = '';
+    if (failN === 0 && passN > 0) {
+      narasiText =
+        `Berdasarkan hasil verifikasi di atas, seluruh ${passN} parameter desain yang diperiksa ` +
+        `telah memenuhi kriteria teknis yang ditetapkan dalam Lampiran III Peraturan Menteri Lingkungan Hidup dan ` +
+        `Kehutanan Nomor 11 Tahun 2025. ` +
+        (naN > 0
+          ? `Terdapat ${naN} parameter yang tidak dapat diverifikasi secara otomatis dan memerlukan pengecekan manual oleh perencana. `
+          : '') +
+        `Dengan demikian, desain unit proses ini dinilai layak secara teknis sesuai regulasi yang berlaku.`;
+    } else if (failN > 0 && passN > 0) {
+      narasiText =
+        `Berdasarkan hasil verifikasi di atas, sebanyak ${passN} dari ${totalChecked} parameter desain ` +
+        `telah memenuhi kriteria teknis Lampiran III Peraturan Menteri Lingkungan Hidup dan Kehutanan Nomor 11 Tahun 2025, ` +
+        `sedangkan ${failN} parameter belum memenuhi persyaratan yang ditetapkan. ` +
+        (naN > 0
+          ? `Selain itu, terdapat ${naN} parameter yang memerlukan pengecekan manual. `
+          : '') +
+        `Parameter yang tidak memenuhi kriteria perlu ditinjau ulang dan dilakukan penyesuaian dimensi atau beban desain sebelum dokumen ini dapat digunakan sebagai acuan teknis.`;
+    } else if (failN > 0 && passN === 0) {
+      narasiText =
+        `Berdasarkan hasil verifikasi di atas, seluruh ${failN} parameter desain yang diperiksa belum memenuhi ` +
+        `kriteria teknis Lampiran III Peraturan Menteri Lingkungan Hidup dan Kehutanan Nomor 11 Tahun 2025. ` +
+        `Diperlukan peninjauan menyeluruh terhadap dimensi dan beban desain unit proses ini.`;
+    } else if (passN === 0 && failN === 0 && naN > 0) {
+      narasiText =
+        `Seluruh ${naN} parameter pada unit proses ini memerlukan pengecekan manual oleh perencana dan tidak dapat diverifikasi ` +
+        `secara otomatis berdasarkan Lampiran III Peraturan Menteri Lingkungan Hidup dan Kehutanan Nomor 11 Tahun 2025.`;
+    }
+
+    if (narasiText) {
+      elems.push(new Paragraph({
+        children: [new TextRun({ text: narasiText, font: 'Times New Roman', size: 20, color: '000000' })],
+        alignment: AlignmentType.JUSTIFIED,
+        spacing: { before: 0, after: 120 },
+      }));
+    } else {
+      elems.push(gap(120));
+    }
   }
 
   return { elems, resRows };
@@ -35475,7 +35521,7 @@ function buildReport(data) {
         borders: { top:{style:BorderStyle.SINGLE,size:2,color:C.borderLight}, bottom:{style:BorderStyle.SINGLE,size:2,color:C.borderLight}, left:{style:BorderStyle.SINGLE,size:2,color:C.borderLight}, right:{style:BorderStyle.SINGLE,size:2,color:C.borderLight} },
         margins: { top:60, bottom:60, left:120, right:100 },
         children: [new Paragraph({
-          children: [new TextRun({ text:cell, bold:ri===0, size:ri===0?18:19, color:'000000', font:ci===1&&ri>0?'Courier New':'Calibri' })],
+          children: [new TextRun({ text:cell, bold:ri===0, size:ri===0?18:19, color:'000000', font:ci===1&&ri>0?'Courier New':'Times New Roman' })],
           alignment: ci>0 ? AlignmentType.CENTER : AlignmentType.LEFT,
         })],
       })),
@@ -35522,7 +35568,7 @@ function buildReport(data) {
         borders: { top:{style:BorderStyle.SINGLE,size:2,color:C.borderLight}, bottom:{style:BorderStyle.SINGLE,size:2,color:C.borderLight}, left:{style:BorderStyle.SINGLE,size:2,color:C.borderLight}, right:{style:BorderStyle.SINGLE,size:2,color:C.borderLight} },
         margins: { top:60, bottom:60, left:120, right:100 },
         children: [new Paragraph({
-          children: [new TextRun({ text:String(cell), bold:ri===0||ci<2, size:ri===0?18:ci===1?22:18, color:'000000', font:ci===1&&ri>0?'Courier New':'Calibri' })],
+          children: [new TextRun({ text:String(cell), bold:ri===0||ci<2, size:ri===0?18:ci===1?22:18, color:'000000', font:ci===1&&ri>0?'Courier New':'Times New Roman' })],
           alignment: ci>0 ? AlignmentType.CENTER : AlignmentType.LEFT,
         })],
       })),
@@ -35530,10 +35576,10 @@ function buildReport(data) {
   }));
 
   children.push(gap(120));
-  children.push(p([tx('Catatan: ', {bold:true, size:17, color:C.mutedText}), tx('Dokumen ini digenerate otomatis oleh IPAL Checker. Semua perhitungan mengacu pada Lampiran III Permen LH/BPLH No. 11 Tahun 2025. Gunakan sebagai pendamping, bukan pengganti kajian teknis resmi.', {size:17, color:C.mutedText, italic:true})]));
+  children.push(p([tx('Catatan: ', {bold:true, size:17, color:C.mutedText}), tx('Dokumen ini digenerate otomatis oleh IPAL Checker. Semua perhitungan mengacu pada Lampiran III Permen LH/BPLH No. 11 Tahun 2025. Gunakan sebagai pendamping, bukan pengganti kajian teknis resmi.', {size:17, color:C.mutedText})]));
 
   return new Document({
-    styles: { default: { document: { run: { font:'Calibri', size:20 } } } },
+    styles: { default: { document: { run: { font:'Times New Roman', size:20 } } } },
     sections: [{
       properties: { page: { margin: { top:1440, bottom:1440, left:1440, right:1080 } } },
       children,
