@@ -136,6 +136,14 @@ input.rem-input{width:52px;border:1px solid #bbb;border-radius:3px;padding:2px 4
 input.rem-input:focus{outline:none;border-color:#888;background:#fff;}
 select.rem-sel{width:100%;font-size:0.65rem;border:1px solid #c8b860;border-radius:3px;padding:1px 2px;background:#fffde7;font-family:inherit;cursor:pointer;display:block;max-width:90px;overflow:hidden;text-overflow:ellipsis;}
 select.rem-sel:focus{outline:none;border-color:#888;}
+.removal-recap-tbl tr.rem-row-active>td,.removal-recap-tbl tr.rem-row-active>th{background-color:rgba(254,243,199,0.7)!important;transition:background-color .12s;}
+.removal-recap-tbl td.rem-col-active,.removal-recap-tbl th.rem-col-active{background-color:rgba(191,219,254,0.6)!important;transition:background-color .12s;}
+.removal-recap-tbl tr.rem-row-active>td.rem-col-active{background-color:rgba(37,99,235,0.22)!important;box-shadow:inset 0 0 0 2px #2563eb;z-index:1;position:relative;}
+.removal-recap-tbl tr.rem-row-active>td.rem-freeze-no,.removal-recap-tbl tr.rem-row-active>td.rem-freeze-param{background-color:rgba(254,243,199,0.85)!important;border-left:3px solid #d97706!important;}
+.removal-recap-tbl thead th.rem-col-active{background-color:rgba(37,99,235,0.35)!important;color:#fff!important;text-shadow:0 1px 2px rgba(0,0,0,.2);}
+.removal-recap-tbl tbody td.rem-col-active{border-top:2px solid rgba(37,99,235,0.4)!important;border-bottom:2px solid rgba(37,99,235,0.4)!important;}
+#remFocusLabel{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;font-size:.8rem;font-weight:700;padding:8px 22px;border-radius:24px;pointer-events:none;box-shadow:0 4px 20px rgba(37,99,235,.45),0 2px 8px rgba(0,0,0,.2);opacity:0;transition:opacity .2s,transform .2s;z-index:9999;white-space:nowrap;letter-spacing:.02em;transform:translateX(-50%) translateY(6px);}
+#remFocusLabel.visible{opacity:1;transform:translateX(-50%) translateY(0);}
 .uc-hd{background:var(--bg);border-bottom:1px solid var(--line);padding:12px 16px;display:flex;align-items:center;gap:10px;}
 .u-seq{background:var(--ink);color:white;width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700;flex-shrink:0;}
 .u-name{font-weight:600;font-size:.87rem;color:var(--ink);flex:1;letter-spacing:-0.005em;}
@@ -1901,14 +1909,16 @@ function renderRemovalRecap() {
   const nUnits = units.length;
 
   // Helper: build per-param-per-unit cell pair (% Removal dropdown+input / Keluar)
-  function cellPair(uid, param, cumulIn) {
+  function cellPair(uid, param, cumulIn, ui) {
+    const colPct = 4 + ui*2;
+    const colOut = 5 + ui*2;
     const def = REMOVAL_EFF[(ipal.units.find(u=>u.id===uid)||{}).type] || {};
     const presets = Array.isArray(def[param]) ? def[param] : [];
     const curPct = getParamPct(uid, param);
     const klorinAdd = def.klorin_add || 0;
 
     if(param === 'pH') {
-      return `<td class="rem-pct-cell" colspan="2" style="color:#888;font-size:0.75rem;">Tidak berubah</td>`;
+      return `<td class="rem-pct-cell" data-col="${colPct}" colspan="2" style="color:#888;font-size:0.75rem;">Tidak berubah</td>`;
     }
     if(param === 'Klorin') {
       const dosePresets = def.klorin_add_presets;
@@ -1947,7 +1957,7 @@ function renderRemovalRecap() {
     // Find current preset index
     const curPresetIdx = presets.findIndex(p => p.pct === curPct);
 
-    return `<td class="rem-pct-cell">
+    return `<td class="rem-pct-cell" data-col="${colPct}">
       <div style="display:flex;flex-direction:row;gap:2px;align-items:center;flex-wrap:nowrap;">
         <select class="rem-sel" onchange="applyParamPreset(${uid},'${param}',this.value)" title="Pilih referensi literatur" style="flex:1;min-width:0;">
           <option value="">✏</option>
@@ -1958,7 +1968,7 @@ function renderRemovalRecap() {
           placeholder="%" title="Isi manual %" style="width:40px;margin-top:0;flex-shrink:0;">
       </div>
     </td>
-    <td class="rem-out-cell">${keluarDisp}</td>`;
+    <td class="rem-out-cell" data-col="${colOut}">${keluarDisp}</td>`;
   }
 
   // ── Compute cumulative outputs ──
@@ -1998,18 +2008,18 @@ function renderRemovalRecap() {
   // ── Build header ──
   let thead = `<thead>
     <tr>
-      <th rowspan="2" class="rem-freeze-no" style="min-width:32px;">No</th>
-      <th rowspan="2" class="rem-freeze-param" style="min-width:120px;">Parameter</th>
-      <th rowspan="2">Unit</th>
-      <th rowspan="2" class="rem-inf-hd">INFLUENT</th>`;
-  units.forEach(u => {
-    thead += `<th colspan="2" class="unit-hd" style="min-width:180px;">${UL[u.type]||u.type}</th>`;
+      <th rowspan="2" class="rem-freeze-no" data-col="0" style="min-width:32px;">No</th>
+      <th rowspan="2" class="rem-freeze-param" data-col="1" style="min-width:120px;">Parameter</th>
+      <th rowspan="2" data-col="2">Unit</th>
+      <th rowspan="2" class="rem-inf-hd" data-col="3">INFLUENT</th>`;
+  units.forEach((u, ui) => {
+    thead += `<th colspan="2" class="unit-hd" data-col="${4+ui*2}" style="min-width:180px;">${UL[u.type]||u.type}</th>`;
   });
-  thead += `<th rowspan="2" class="outlet-hd">OUTLET<br>IPAL</th>`;
-  if(bm) thead += `<th rowspan="2" class="bm-hd">BMAL</th>`;
+  thead += `<th rowspan="2" class="outlet-hd" data-col="${4+nUnits*2}">OUTLET<br>IPAL</th>`;
+  if(bm) thead += `<th rowspan="2" class="bm-hd" data-col="${5+nUnits*2}">BMAL</th>`;
   thead += `</tr><tr>`;
-  units.forEach(() => {
-    thead += `<th class="rem-subhd">% Removal<br><small style="font-weight:400;color:#aaa;">(referensi / manual)</small></th><th class="rem-subhd">Keluar</th>`;
+  units.forEach((u, ui) => {
+    thead += `<th class="rem-subhd" data-col="${4+ui*2}">% Removal<br><small style="font-weight:400;color:#aaa;">(referensi / manual)</small></th><th class="rem-subhd" data-col="${5+ui*2}">Keluar</th>`;
   });
   thead += `</tr></thead>`;
 
@@ -2035,16 +2045,17 @@ function renderRemovalRecap() {
     // Unit cells
     let unitCells = '';
     if(param.qualOnly) {
-      // Qualitative params (Salmonella, Shigella, Vibrio) — no % removal, just BM note
-      units.forEach(() => { unitCells += `<td class="rem-pct-cell" style="color:#888;text-align:center;font-size:0.75rem;" colspan="2">Tidak dapat dihitung</td>`; });
+      units.forEach((u, ui) => {
+        unitCells += `<td class="rem-pct-cell" data-col="${4+ui*2}" style="color:#888;text-align:center;font-size:0.75rem;" colspan="2">Tidak dapat dihitung</td>`;
+      });
     } else if(param.key === 'pH') {
-      units.forEach(u => {
-        unitCells += `<td class="rem-pct-cell" style="color:#888;text-align:center;font-size:0.8rem;" colspan="1">—</td><td class="rem-out-cell">6–9</td>`;
+      units.forEach((u, ui) => {
+        unitCells += `<td class="rem-pct-cell" data-col="${4+ui*2}" style="color:#888;text-align:center;font-size:0.8rem;">—</td><td class="rem-out-cell" data-col="${5+ui*2}">6–9</td>`;
       });
     } else {
       units.forEach((u, ui) => {
         const inVal = trace[ui]?.[param.key]?.inVal ?? null;
-        unitCells += cellPair(u.id, param.key, inVal);
+        unitCells += cellPair(u.id, param.key, inVal, ui);
       });
     }
 
@@ -2082,13 +2093,13 @@ function renderRemovalRecap() {
     }
 
     tbody += `<tr>
-      <td class="rem-freeze-no td-freeze">${pi+1}</td>
-      <td class="rem-freeze-param td-freeze"><b>${param.label}</b></td>
-      <td class="rem-unit-col">${param.unit}</td>
-      <td class="rem-inf-col">${infCell}</td>
+      <td class="rem-freeze-no td-freeze" data-col="0">${pi+1}</td>
+      <td class="rem-freeze-param td-freeze" data-col="1"><b>${param.label}</b></td>
+      <td class="rem-unit-col" data-col="2">${param.unit}</td>
+      <td class="rem-inf-col" data-col="3">${infCell}</td>
       ${unitCells}
-      <td class="rem-outlet-col"><b>${outletDisp}</b></td>
-      ${bm ? `<td class="rem-bm-col">${bmCell}</td>` : ''}
+      <td class="rem-outlet-col" data-col="${4+nUnits*2}"><b>${outletDisp}</b></td>
+      ${bm ? `<td class="rem-bm-col" data-col="${5+nUnits*2}">${bmCell}</td>` : ''}
     </tr>`;
   });
 
@@ -2142,6 +2153,84 @@ function renderRemovalRecap() {
 function refreshAllRemoval() {
   renderRemovalRecap();
 }
+
+// ── REMOVAL TABLE FOCUS HIGHLIGHT ───────────────────────────────────────────
+(function(){
+  let _activeRow = null, _activeCols = [], _labelTimer = null;
+
+  function clearHighlight() {
+    if(_activeRow) { _activeRow.classList.remove('rem-row-active'); _activeRow = null; }
+    _activeCols.forEach(th => th.classList.remove('rem-col-active'));
+    _activeCols = [];
+    const lbl = document.getElementById('remFocusLabel');
+    if(lbl) lbl.classList.remove('visible');
+    if(_labelTimer) { clearTimeout(_labelTimer); _labelTimer = null; }
+  }
+
+  function setHighlight(inputEl) {
+    clearHighlight();
+    const tbl = inputEl.closest('table.removal-recap-tbl');
+    if(!tbl) return;
+    const td = inputEl.closest('td');
+    if(!td) return;
+    const tr = td.closest('tr');
+    if(!tr) return;
+
+    // Highlight active row
+    tr.classList.add('rem-row-active');
+    _activeRow = tr;
+
+    // Use data-col for precise column detection (handles colspan correctly)
+    const colKey = td.dataset.col;
+    if(colKey !== undefined) {
+      tbl.querySelectorAll(`[data-col="${colKey}"]`).forEach(cell => {
+        cell.classList.add('rem-col-active');
+        _activeCols.push(cell);
+      });
+    }
+
+    // Build label: "Parameter  ▸  Unit"
+    const paramLabel = tr.querySelector('.rem-freeze-param b')?.textContent?.trim()
+                    || tr.querySelector('.rem-freeze-param')?.textContent?.trim() || '';
+    let unitLabel = '';
+    if(colKey !== undefined) {
+      // Find unit header with matching data-col (first row of thead, class unit-hd)
+      const unitTh = tbl.querySelector(`thead tr:first-child th.unit-hd[data-col="${colKey}"]`);
+      if(unitTh) {
+        unitLabel = unitTh.textContent.trim();
+      } else {
+        // If focused on "Keluar" col (odd col), find its "% Removal" sibling (even col)
+        const pctCol = colKey % 2 === 1 ? String(parseInt(colKey)-1) : null;
+        if(pctCol) {
+          const unitTh2 = tbl.querySelector(`thead tr:first-child th.unit-hd[data-col="${pctCol}"]`);
+          if(unitTh2) unitLabel = unitTh2.textContent.trim();
+        }
+      }
+    }
+
+    const lbl = document.getElementById('remFocusLabel');
+    if(lbl) {
+      const parts = [paramLabel, unitLabel].filter(Boolean);
+      lbl.textContent = parts.length ? parts.join('  ▶  ') : '';
+      lbl.classList.toggle('visible', parts.length > 0);
+    }
+  }
+
+  document.addEventListener('focusin', e => {
+    const el = e.target;
+    if(!el.matches('input.rem-input, select.rem-sel')) return;
+    if(!el.closest('#removalRecapWrap')) return;
+    if(_labelTimer) { clearTimeout(_labelTimer); _labelTimer = null; }
+    setHighlight(el);
+  }, true);
+
+  document.addEventListener('focusout', e => {
+    const el = e.target;
+    if(!el.matches('input.rem-input, select.rem-sel')) return;
+    if(!el.closest('#removalRecapWrap')) return;
+    _labelTimer = setTimeout(clearHighlight, 200);
+  }, true);
+})();
 
 // ── SLUDGE / GAS STATE ──────────────────────────────
 // sludgeCaptureOverrides[uid] = efisiensi sludge capture (0-100), default 100
@@ -38378,6 +38467,7 @@ function applyInfluent(param) {
 }
 
 </script>
+  <div id="remFocusLabel"></div>
 </body>
 
 </html>
