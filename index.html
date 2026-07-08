@@ -520,6 +520,17 @@ footer{text-align:center;padding:26px 20px;font-size:.72rem;color:var(--faint);b
 .pa-recap-meta{font-size:0.72rem;color:var(--muted);margin-top:6px;padding-left:6px;}
 .pa-recap-unassigned{background:var(--bg);border:1px dashed var(--line);border-radius:var(--r-sm);padding:14px 16px;font-size:0.78rem;color:var(--muted);margin-top:12px;}
 .pa-recap-unassigned strong{color:var(--ink-soft);}
+.pa-diagram-hd{font-weight:700;font-size:0.92rem;color:var(--ink);margin-bottom:4px;}
+.pa-diagram-sub{font-size:0.78rem;color:var(--muted);margin-bottom:14px;}
+.pa-diagram-box{background:var(--card);border:1px solid var(--line);border-radius:var(--r-sm);padding:16px;overflow-x:auto;}
+.pa-diagram-box svg{display:block;margin:0 auto;}
+.pa-diagram-empty{text-align:center;padding:30px 20px;color:var(--muted);font-size:0.82rem;}
+.pa-node-src{fill:#e3f2fd;stroke:#1e3a5f;}
+.pa-node-src-text{fill:var(--ink);font-weight:600;}
+.pa-node-ipal{fill:var(--accent-soft);stroke:var(--accent);}
+.pa-node-ipal-text{fill:var(--ink);font-weight:700;}
+.pa-node-unassigned{fill:#fff3e0;stroke:#e8a33d;}
+.pa-flow-label{fill:var(--muted);font-weight:600;}
 .data-ipal-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-sm);padding:18px 20px;margin-bottom:12px;display:flex;align-items:center;gap:16px;}
 .data-ipal-card .dic-icon{width:40px;height:40px;border-radius:10px;background:var(--brand-blue-light);display:flex;align-items:center;justify-content:center;color:var(--brand-blue);flex-shrink:0;}
 .data-ipal-card .dic-icon svg{width:20px;height:20px;}
@@ -545,12 +556,37 @@ footer{text-align:center;padding:26px 20px;font-size:.72rem;color:var(--faint);b
 .toggle::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
 .toggle.on::after{left:20px;}
 
+/* ── FLUKTUASI PAGE ───────────────────────────────── */
+.fl-ipal-btn{padding:8px 16px;border:1.5px solid var(--line);border-radius:20px;background:var(--card);cursor:pointer;font-size:0.8rem;font-weight:600;color:var(--muted);transition:all .15s;white-space:nowrap;}
+.fl-ipal-btn.active{background:var(--ink);border-color:var(--ink);color:#fff;}
+.fl-ipal-btn:hover:not(.active){border-color:var(--ink);color:var(--ink);}
+.fl-section-hd{font-weight:700;font-size:0.9rem;color:var(--ink);margin:20px 0 10px;}
+.fl-src-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.fl-src-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:12px;font-size:0.73rem;font-weight:600;}
+.fl-tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--card);margin-bottom:22px;}
+.fl-tbl{border-collapse:collapse;width:100%;min-width:700px;font-size:0.79rem;}
+.fl-tbl th{background:#1e3a5f;color:#fff;font-weight:600;padding:8px 10px;text-align:center;white-space:nowrap;font-size:0.72rem;}
+.fl-tbl th:first-child{text-align:left;}
+.fl-tbl td{padding:6px 10px;border-bottom:1px solid var(--line-soft);text-align:center;vertical-align:middle;}
+.fl-tbl td:first-child{font-weight:600;color:var(--ink);text-align:left;background:var(--bg);}
+.fl-tbl tr.fl-tbl-total td{font-weight:700;background:#f4f7fb;border-top:2px solid var(--line);}
+.fl-tbl td{border-right:1px solid var(--line-soft);}
+.fl-tbl td:last-child{border-right:none;}
+.fl-tbl .fl-peak{background:#fff8e1;font-weight:700;color:#b45309;}
+.fl-chart-wrap{background:var(--card);border:1px solid var(--line);border-radius:var(--r-sm);padding:16px;margin-bottom:22px;overflow-x:auto;}
+.fl-chart-wrap canvas{display:block;max-width:100%;}
+.fl-info-box{background:#f0f6ff;border:1px solid #c8d8f0;border-radius:var(--r-sm);padding:12px 16px;font-size:0.78rem;color:var(--ink-soft);margin-bottom:14px;line-height:1.6;}
+.fl-info-box strong{color:var(--ink);}
+.fl-profile-legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
+.fl-profile-item{display:flex;align-items:center;gap:6px;font-size:0.73rem;color:var(--ink-soft);}
+.fl-profile-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
 .topbar-user{display:flex;align-items:center;gap:8px;}
 .icon-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--card);display:flex;align-items:center;justify-content:center;color:var(--ink-soft);cursor:pointer;flex-shrink:0;}
 .icon-btn svg{width:16px;height:16px;}
 .avatar-btn{width:34px;height:34px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;flex-shrink:0;}
 .avatar-btn svg{width:17px;height:17px;}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -591,6 +627,11 @@ footer{text-align:center;padding:26px 20px;font-size:.72rem;color:var(--faint);b
       <button class="side-item active" id="nav_penggunaan_air" onclick="showPage('penggunaan_air')">
         <span class="side-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5c2.6 3 5.2 6.2 5.2 9.5a5.2 5.2 0 0 1-10.4 0c0-3.3 2.6-6.5 5.2-9.5z"/></svg></span>
         <span class="side-lbl">Penggunaan Air</span>
+        <svg class="side-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      </button>
+      <button class="side-item" id="nav_fluktuasi" onclick="showPage('fluktuasi')">
+        <span class="side-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 12 6 6 10 14 14 8 18 16 22 10"/></svg></span>
+        <span class="side-lbl">Fluktuasi Air Limbah</span>
         <svg class="side-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
       </button>
       <button class="side-item" id="nav_dashboard" onclick="showPage('dashboard')">
@@ -680,7 +721,7 @@ footer{text-align:center;padding:26px 20px;font-size:.72rem;color:var(--faint);b
         <div class="page active" id="page_penggunaan_air">
           <div class="simple-page-hd">
             <h2>Penggunaan Air</h2>
-            <p>Daftar kegiatan/fasilitas, kebutuhan air baku, timbulan air limbah, dan unit IPAL tujuan. Kebutuhan air baku dapat dihitung otomatis mengacu SNI 03-7065-2005 (Tabel 1) atau diisi manual.</p>
+            <p>Daftar kegiatan/fasilitas, kebutuhan air baku, timbulan air limbah, dan unit IPAL tujuan. Kebutuhan air baku dapat dihitung otomatis mengacu standar (SNI 03-7065-2005 atau Kriteria Ditjen Cipta Karya, 1996) atau diisi manual.</p>
           </div>
           <div class="pa-toolbar">
             <button class="btn-add" onclick="addPenggunaanAirRow()">
@@ -710,6 +751,7 @@ footer{text-align:center;padding:26px 20px;font-size:.72rem;color:var(--faint);b
           </div>
 
           <div id="paRecapWrap" style="margin-top:26px;"></div>
+
         </div>
 
         <!-- ══════════ PAGE: DASHBOARD ══════════ -->
@@ -766,7 +808,16 @@ footer{text-align:center;padding:26px 20px;font-size:.72rem;color:var(--faint);b
               </div>
               <div class="sub-lbl">Data Aliran &amp; Kualitas Influent</div>
               <div class="form-grid">
-                <div class="fg"><label>Debit Total (Q)</label><input type="text" id="qTotal" placeholder="0,00" oninput="maskID(this)" onblur="formatID(this);recalcAll();updateSummary()"><span class="unit-hint">m³/hari</span></div>
+                <div class="fg" id="qTotalFg">
+                  <label>Debit Total (Q)</label>
+                  <div class="pa-mode-toggle" style="margin-bottom:6px;">
+                    <button type="button" class="pa-mode-btn active" id="qMode_manual_btn" onclick="setQMode('manual')">Manual</button>
+                    <button type="button" class="pa-mode-btn" id="qMode_auto_btn" onclick="setQMode('auto')">Otomatis (dari Penggunaan Air)</button>
+                  </div>
+                  <input type="text" id="qTotal" placeholder="0,00" oninput="maskID(this)" onblur="formatID(this);recalcAll();updateSummary()">
+                  <div id="qTotalAutoHint" class="unit-hint" style="display:none;margin-top:4px;"></div>
+                  <span class="unit-hint">m³/hari</span>
+                </div>
                 <div class="fg"><label>BOD Influent</label><input type="text" id="bodIn" placeholder="0,00" oninput="maskID(this)" onblur="formatID(this);recalcAll();updateSummary()"><span class="unit-hint">mg/l</span></div>
                 <div class="fg"><label>COD Influent</label><input type="text" id="codIn" placeholder="0,00" oninput="maskID(this)" onblur="formatID(this);recalcAll();updateSummary()"><span class="unit-hint">mg/l</span></div>
                 <div class="fg"><label>MLVSS <span style="font-weight:400;font-style:italic;text-transform:none;">(Unit Aerobik)</span></label><input type="text" id="mlvssG" placeholder="2.500" oninput="maskID(this)" onblur="formatID(this);recalcAll();updateSummary()"><span class="unit-hint">mg/l — untuk hitung F/M ratio</span></div>
@@ -898,6 +949,22 @@ footer{text-align:center;padding:26px 20px;font-size:.72rem;color:var(--faint);b
           </div>
         </div>
 
+        <!-- ══════════ PAGE: FLUKTUASI AIR LIMBAH ══════════ -->
+        <div class="page" id="page_fluktuasi" style="max-width:none;padding:12px 16px;">
+          <div style="margin-bottom:14px;">
+            <h2 style="font-size:1.1rem;font-weight:700;color:var(--ink);margin:0 0 3px;">Fluktuasi Air Limbah</h2>
+            <p style="font-size:0.78rem;color:var(--muted);margin:0;">Distribusi debit air limbah per jam (m³/hari dan %) berdasarkan profil karakter sumber kegiatan/fasilitas yang ditugaskan ke setiap unit IPAL.</p>
+          </div>
+          <!-- IPAL selector -->
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+            <label style="font-size:0.8rem;font-weight:700;color:var(--ink);white-space:nowrap;">Pilih Unit IPAL:</label>
+            <div id="fluktIpalBtns" style="display:flex;gap:7px;flex-wrap:wrap;"></div>
+          </div>
+          <div id="fluktContent">
+            <div class="es"><div class="ei">📈</div><p>Belum ada data kegiatan/fasilitas.<br>Isi Penggunaan Air terlebih dahulu.</p></div>
+          </div>
+        </div>
+
         <!-- ══════════ PAGE: LAPORAN ══════════ -->
         <div class="page" id="page_laporan">
           <div class="simple-page-hd">
@@ -1023,7 +1090,7 @@ footer{text-align:center;padding:26px 20px;font-size:.72rem;color:var(--faint);b
 
 <script>
 // ── DAFTAR HALAMAN (dibutuhkan oleh showPage) ────────
-const PAGES = ['penggunaan_air','dashboard','hasil','lumpur','laporan','referensi','pengaturan'];
+const PAGES = ['penggunaan_air','dashboard','hasil','lumpur','fluktuasi','laporan','referensi','pengaturan'];
 
 // ── FORMAT ANGKA INDONESIA ──────────────────────────
 function parseID(s){
@@ -2669,6 +2736,61 @@ function setTipe(t){
   if(typeof updateSummary==='function') updateSummary();
 }
 
+// ── DEBIT TOTAL (Q): Manual vs Otomatis dari Penggunaan Air ─────────
+// Sums the "Air Limbah" (m3/hari) of every Penggunaan Air row assigned to
+// the given IPAL id. Reuses the same paAirLimbah() calc used in the
+// Penggunaan Air recap, so the number always matches BAB 1/2 of the export.
+function paGetTotalLimbahForIpal(ipalId){
+  if(!ipalId || typeof paRows==='undefined') return 0;
+  return paRows
+    .filter(r=>String(r.ipalId)===String(ipalId))
+    .reduce((sum,r)=>sum + paAirLimbah(r), 0);
+}
+
+function setQMode(mode){
+  const ipal = getActiveIpal();
+  if(!ipal) return;
+  ipal.qMode = mode;
+  renderQTotalField();
+  recalcAll();
+  updateSummary();
+}
+
+// Renders the qTotal input to match the active IPAL's current qMode:
+// - 'manual': plain editable field (value preserved from ipal.Q)
+// - 'auto': readonly field showing the live total from Penggunaan Air
+function renderQTotalField(){
+  const ipal = getActiveIpal();
+  const qEl = document.getElementById('qTotal');
+  const hintEl = document.getElementById('qTotalAutoHint');
+  const btnManual = document.getElementById('qMode_manual_btn');
+  const btnAuto = document.getElementById('qMode_auto_btn');
+  if(!ipal || !qEl) return;
+
+  const mode = ipal.qMode || 'manual';
+  if(btnManual) btnManual.classList.toggle('active', mode==='manual');
+  if(btnAuto)   btnAuto.classList.toggle('active',   mode==='auto');
+
+  if(mode==='auto'){
+    const total = paGetTotalLimbahForIpal(ipal.id);
+    qEl.value = paFmt(total);
+    qEl.readOnly = true;
+    qEl.classList.add('pa-auto');
+    if(hintEl){
+      const nSrc = (typeof paRows!=='undefined') ? paRows.filter(r=>String(r.ipalId)===String(ipal.id)).length : 0;
+      hintEl.style.display = '';
+      hintEl.textContent = nSrc>0
+        ? `Otomatis dari ${nSrc} kegiatan/fasilitas yang ditugaskan ke unit IPAL ini di menu Penggunaan Air.`
+        : 'Belum ada kegiatan/fasilitas yang ditugaskan ke unit IPAL ini di menu Penggunaan Air.';
+    }
+  } else {
+    qEl.readOnly = false;
+    qEl.classList.remove('pa-auto');
+    qEl.value = ipal.Q || '';
+    if(hintEl) hintEl.style.display = 'none';
+  }
+}
+
 // ── UNIT LABELS ────────────────────────────────────
 const UL={
   grease_trap:'Grease Trap',equalization:'Equalization Tank',
@@ -2977,7 +3099,7 @@ let unitCounter = 0;
 
 function newIpal(name='IPAL 1'){
   ipalCounter++;
-  return {id: ipalCounter, name, tipe:'buang', peruntukan:'', Q:'', BOD:'', COD:'', MLVSS:'', peakFF:'1,5', units:[], uc:0};
+  return {id: ipalCounter, name, tipe:'buang', peruntukan:'', Q:'', qMode:'manual', BOD:'', COD:'', MLVSS:'', peakFF:'1,5', units:[], uc:0};
 }
 
 // ── IPAL MANAGEMENT ────────────────────────────────
@@ -3044,7 +3166,7 @@ function saveActiveIpalState(){
   const perEl = document.getElementById('ipalPeruntukan');
   if(tipeEl) ipal.tipe       = tipeEl.value || 'buang';
   if(perEl)  ipal.peruntukan = perEl.value  || '';
-  if(qEl)    ipal.Q          = qEl.value || '';
+  if(qEl && (ipal.qMode||'manual')==='manual') ipal.Q = qEl.value || '';
   if(bodEl)  ipal.BOD   = bodEl.value || '';
   if(codEl)  ipal.COD   = codEl.value || '';
   if(mlvssEl)ipal.MLVSS = mlvssEl.value || '';
@@ -3073,6 +3195,7 @@ function loadActiveIpalState(){
   set('codIn',  ipal.COD);
   set('mlvssG', ipal.MLVSS);
   set('peakFF', ipal.peakFF || '1,5');
+  renderQTotalField();
   // Restore units
   renderUnits();
   refreshAllRemoval();
@@ -3100,6 +3223,16 @@ function refreshPenggunaanAirIfVisible(){
   const pg = document.getElementById('page_penggunaan_air');
   if(pg && pg.classList.contains('active') && typeof renderPenggunaanAirPage==='function'){
     renderPenggunaanAirPage();
+  }
+  // Jika halaman fluktuasi sedang terbuka, refresh juga supaya realtime
+  refreshFluktuasiIfVisible();
+}
+
+function refreshFluktuasiIfVisible(){
+  const pg = document.getElementById('page_fluktuasi');
+  if(pg && pg.classList.contains('active') && typeof renderFluktuasiPage==='function'){
+    if(fluktChart){ fluktChart.destroy(); fluktChart = null; }
+    renderFluktuasiPage();
   }
 }
 
@@ -3141,7 +3274,7 @@ function captureAllIpalStates(){
     const perEl3 = document.getElementById('ipalPeruntukan');
     if(tipeEl)  ipal.tipe       = tipeEl.value  || 'buang';
     if(perEl3)  ipal.peruntukan = perEl3.value  || '';
-    if(qEl)     ipal.Q      = qEl.value     || '';
+    if(qEl && (ipal.qMode||'manual')==='manual') ipal.Q = qEl.value || '';
     if(bodEl)   ipal.BOD    = bodEl.value   || '';
     if(codEl)   ipal.COD    = codEl.value   || '';
     if(mlvssEl) ipal.MLVSS  = mlvssEl.value || '';
@@ -3565,6 +3698,7 @@ function showPage(name){
   if(name==='dashboard'){ renderUnits(); restoreUnitDims(); refreshAllRemoval(); }
   if(name==='hasil') { renderHasilPage(); renderRemovalRecap(); }
   if(name==='lumpur') renderSludgeGasPage();
+  if(name==='fluktuasi') renderFluktuasiPage();
   if(name==='referensi') renderReferensiPage();
   window.scrollTo({top:0,behavior:'instant'});
 }
@@ -3638,23 +3772,56 @@ function renderHasilPage(){
 // ── PENGGUNAAN AIR PAGE ─────────────────────────────
 // Tabel 1 SNI 03-7065-2005 — Pemakaian air dingin minimum sesuai penggunaan gedung
 const SNI_PEMAKAIAN_AIR = [
-  { label:'Rumah tinggal',              nilai:120, satuan:'Liter/penghuni/hari' },
-  { label:'Rumah susun',                nilai:100, satuan:'Liter/penghuni/hari' },
-  { label:'Asrama',                     nilai:120, satuan:'Liter/penghuni/hari' },
-  { label:'Rumah Sakit',                nilai:500, satuan:'Liter/tempat tidur pasien/hari' },
-  { label:'Sekolah Dasar',              nilai:40,  satuan:'Liter/siswa/hari' },
-  { label:'SLTP',                       nilai:50,  satuan:'Liter/siswa/hari' },
-  { label:'SMU/SMK dan lebih tinggi',   nilai:80,  satuan:'Liter/siswa/hari' },
-  { label:'Ruko/Rukan',                 nilai:100, satuan:'Liter/penghuni dan pegawai/hari' },
-  { label:'Kantor / Pabrik',            nilai:50,  satuan:'Liter/pegawai/hari' },
-  { label:'Toserba, toko pengecer',     nilai:5,   satuan:'Liter/m2' },
-  { label:'Restoran',                   nilai:15,  satuan:'Liter/kursi' },
-  { label:'Hotel berbintang',           nilai:250, satuan:'Liter/tempat tidur/hari' },
-  { label:'Hotel Melati / Penginapan',  nilai:150, satuan:'Liter/tempat tidur/hari' },
-  { label:'Gd. pertunjukan, Bioskop',   nilai:10,  satuan:'Liter/kursi' },
-  { label:'Gd. Serba Guna',             nilai:25,  satuan:'Liter/kursi' },
-  { label:'Stasiun, terminal',          nilai:3,   satuan:'Liter/penumpang tiba dan pergi' },
-  { label:'Peribadatan',                nilai:5,   satuan:'Liter/orang (belum dengan air wudhu)' },
+  { label:'Rumah tinggal',              nilai:120, satuan:'Liter/penghuni/hari', sumber:'SNI 03-7065-2005' },
+  { label:'Rumah susun',                nilai:100, satuan:'Liter/penghuni/hari', sumber:'SNI 03-7065-2005' },
+  { label:'Asrama',                     nilai:120, satuan:'Liter/penghuni/hari', sumber:'SNI 03-7065-2005' },
+  { label:'Rumah Sakit',                nilai:500, satuan:'Liter/tempat tidur pasien/hari', sumber:'SNI 03-7065-2005' },
+  { label:'Sekolah Dasar',              nilai:40,  satuan:'Liter/siswa/hari', sumber:'SNI 03-7065-2005' },
+  { label:'SLTP',                       nilai:50,  satuan:'Liter/siswa/hari', sumber:'SNI 03-7065-2005' },
+  { label:'SMU/SMK dan lebih tinggi',   nilai:80,  satuan:'Liter/siswa/hari', sumber:'SNI 03-7065-2005' },
+  { label:'Ruko/Rukan',                 nilai:100, satuan:'Liter/penghuni dan pegawai/hari', sumber:'SNI 03-7065-2005' },
+  { label:'Kantor / Pabrik',            nilai:50,  satuan:'Liter/pegawai/hari', sumber:'SNI 03-7065-2005' },
+  { label:'Toserba, toko pengecer',     nilai:5,   satuan:'Liter/m2', sumber:'SNI 03-7065-2005' },
+  { label:'Restoran',                   nilai:15,  satuan:'Liter/kursi', sumber:'SNI 03-7065-2005' },
+  { label:'Hotel berbintang',           nilai:250, satuan:'Liter/tempat tidur/hari', sumber:'SNI 03-7065-2005' },
+  { label:'Hotel Melati / Penginapan',  nilai:150, satuan:'Liter/tempat tidur/hari', sumber:'SNI 03-7065-2005' },
+  { label:'Gd. pertunjukan, Bioskop',   nilai:10,  satuan:'Liter/kursi', sumber:'SNI 03-7065-2005' },
+  { label:'Gd. Serba Guna',             nilai:25,  satuan:'Liter/kursi', sumber:'SNI 03-7065-2005' },
+  { label:'Stasiun, terminal',          nilai:3,   satuan:'Liter/penumpang tiba dan pergi', sumber:'SNI 03-7065-2005' },
+  { label:'Peribadatan',                nilai:5,   satuan:'Liter/orang (belum dengan air wudhu)', sumber:'SNI 03-7065-2005' },
+
+  // Tabel 5.4 — Kebutuhan Air Non Domestik Untuk Kota Kategori I, II, III, IV
+  // Sumber: Kriteria Perencanaan Ditjen Cipta Karya Dinas PU, 1996
+  { label:'Sekolah (Kota Kat. I-IV)',            nilai:10,   satuan:'Liter/murid/hari',        sumber:'Ditjen Cipta Karya, 1996 — Kota Kat. I, II, III, IV' },
+  { label:'Rumah Sakit (Kota Kat. I-IV)',        nilai:200,  satuan:'Liter/bed/hari',          sumber:'Ditjen Cipta Karya, 1996 — Kota Kat. I, II, III, IV' },
+  { label:'Puskesmas (Kota Kat. I-IV)',          nilai:2000, satuan:'Liter/unit/hari',         sumber:'Ditjen Cipta Karya, 1996 — Kota Kat. I, II, III, IV' },
+  { label:'Masjid (Kota Kat. I-IV)',             nilai:3000, satuan:'Liter/unit/hari',         sumber:'Ditjen Cipta Karya, 1996 — Kota Kat. I, II, III, IV' },
+  { label:'Kantor (Kota Kat. I-IV)',             nilai:10,   satuan:'Liter/pegawai/hari',      sumber:'Ditjen Cipta Karya, 1996 — Kota Kat. I, II, III, IV' },
+  { label:'Pasar (Kota Kat. I-IV)',              nilai:12000,satuan:'Liter/hektar/hari',       sumber:'Ditjen Cipta Karya, 1996 — Kota Kat. I, II, III, IV' },
+  { label:'Hotel (Kota Kat. I-IV)',              nilai:150,  satuan:'Liter/bed/hari',          sumber:'Ditjen Cipta Karya, 1996 — Kota Kat. I, II, III, IV' },
+  { label:'Rumah Makan (Kota Kat. I-IV)',        nilai:100,  satuan:'Liter/tempat duduk/hari', sumber:'Ditjen Cipta Karya, 1996 — Kota Kat. I, II, III, IV' },
+  { label:'Komplek Militer (Kota Kat. I-IV)',    nilai:60,   satuan:'Liter/orang/hari',        sumber:'Ditjen Cipta Karya, 1996 — Kota Kat. I, II, III, IV' },
+  { label:'Kawasan Industri (Kota Kat. I-IV, min)', nilai:0.2, satuan:'Liter/detik/hektar',    sumber:'Ditjen Cipta Karya, 1996 — Kota Kat. I, II, III, IV', perDetik:true },
+  { label:'Kawasan Industri (Kota Kat. I-IV, maks)',nilai:0.8, satuan:'Liter/detik/hektar',    sumber:'Ditjen Cipta Karya, 1996 — Kota Kat. I, II, III, IV', perDetik:true },
+  { label:'Kawasan Pariwisata (Kota Kat. I-IV, min)', nilai:0.1, satuan:'Liter/detik/hektar',  sumber:'Ditjen Cipta Karya, 1996 — Kota Kat. I, II, III, IV', perDetik:true },
+  { label:'Kawasan Pariwisata (Kota Kat. I-IV, maks)',nilai:0.3, satuan:'Liter/detik/hektar',  sumber:'Ditjen Cipta Karya, 1996 — Kota Kat. I, II, III, IV', perDetik:true },
+
+  // Tabel 5.5 — Kebutuhan Air Non Domestik Untuk Kategori V (Desa)
+  // Sumber: Kriteria Perencanaan Ditjen Cipta Karya Dinas PU, 1996
+  { label:'Sekolah (Desa / Kat. V)',       nilai:5,    satuan:'Liter/murid/hari', sumber:'Ditjen Cipta Karya, 1996 — Kategori V (Desa)' },
+  { label:'Rumah Sakit (Desa / Kat. V)',   nilai:200,  satuan:'Liter/bed/hari',   sumber:'Ditjen Cipta Karya, 1996 — Kategori V (Desa)' },
+  { label:'Puskesmas (Desa / Kat. V)',     nilai:1200, satuan:'Liter/unit/hari',  sumber:'Ditjen Cipta Karya, 1996 — Kategori V (Desa)' },
+  { label:'Masjid (Desa / Kat. V)',        nilai:3000, satuan:'Liter/unit/hari',  sumber:'Ditjen Cipta Karya, 1996 — Kategori V (Desa)' },
+  { label:'Mushola (Desa / Kat. V)',       nilai:2000, satuan:'Liter/unit/hari',  sumber:'Ditjen Cipta Karya, 1996 — Kategori V (Desa)' },
+  { label:'Pasar (Desa / Kat. V)',         nilai:12000,satuan:'Liter/hektar/hari',sumber:'Ditjen Cipta Karya, 1996 — Kategori V (Desa)' },
+  { label:'Komersial / Industri (Desa / Kat. V)', nilai:10, satuan:'Liter/hari', sumber:'Ditjen Cipta Karya, 1996 — Kategori V (Desa)' },
+
+  // Tabel 5.6 — Kebutuhan Air Non Domestik Untuk Kategori Lain
+  // Sumber: Kriteria Perencanaan Ditjen Cipta Karya Dinas PU, 1996
+  { label:'Lapangan Terbang (Kategori Lain)',       nilai:10, satuan:'Liter/orang/detik', sumber:'Ditjen Cipta Karya, 1996 — Kategori Lain', perDetik:true },
+  { label:'Pelabuhan (Kategori Lain)',              nilai:50, satuan:'Liter/orang/detik', sumber:'Ditjen Cipta Karya, 1996 — Kategori Lain', perDetik:true },
+  { label:'Stasiun KA dan Terminal Bus (Kategori Lain)', nilai:10, satuan:'Liter/orang/hari', sumber:'Ditjen Cipta Karya, 1996 — Kategori Lain' },
+  { label:'Kawasan Industri (Kategori Lain)',       nilai:0.75, satuan:'Liter/detik/hektar', sumber:'Ditjen Cipta Karya, 1996 — Kategori Lain', perDetik:true },
 ];
 
 // Row: { id, nama, sumberMode:'sni'|'manual', sniIdx, jumlahUnit, airBakuManual,
@@ -3715,15 +3882,52 @@ function paSetLimbahMode(id, mode){
 
 function paRecalcRow(id){
   paCaptureRow(id);
-  renderPenggunaanAirPage();
+  paUpdateComputedCells();
+}
+
+// Lightweight refresh: recompute only the read-only "Air Baku" / "Air Limbah"
+// output cells, the footer totals, and the IPAL recap — WITHOUT rebuilding the
+// row's own <input>/<select> elements. This keeps typing smooth (no focus loss,
+// no lag) because inputs the user is actively editing are never recreated.
+function paUpdateComputedCells(){
+  const foot = document.getElementById('paTableFoot');
+  let totalBaku = 0, totalLimbah = 0;
+
+  paRows.forEach(row=>{
+    const airBaku = paAirBaku(row);
+    const airLimbah = paAirLimbah(row);
+    totalBaku += airBaku;
+    totalLimbah += airLimbah;
+
+    const bakuEl = document.getElementById(`pa${row.id}_bakuOut`);
+    if(bakuEl) bakuEl.value = `${paFmt(airBaku)} m³/hari`;
+
+    const limbahEl = document.getElementById(`pa${row.id}_limbahOut`);
+    if(limbahEl) limbahEl.value = `${paFmt(airLimbah)} m³/hari`;
+  });
+
+  if(foot){
+    foot.innerHTML = `<tr class="pa-tfoot">
+      <td colspan="3" style="text-align:right;">Total</td>
+      <td>${paFmt(totalBaku)} m³/hari</td>
+      <td>${paFmt(totalLimbah)} m³/hari</td>
+      <td colspan="2"></td>
+    </tr>`;
+  }
+
+  renderPaRecap();
 }
 
 function paAirBaku(row){
   // Result always expressed in m3/hari
   if(row.sumberMode==='manual') return paNum(row.airBakuManual);
   const ref = SNI_PEMAKAIAN_AIR[row.sniIdx] || SNI_PEMAKAIAN_AIR[0];
-  // SNI 03-7065-2005 table values are in Liter/unit/hari -> convert to m3/hari
-  return (paNum(row.jumlahUnit) * ref.nilai) / 1000;
+  // Most table values are Liter/unit/hari -> convert to m3/hari by /1000.
+  // A few standards (e.g. Ditjen Cipta Karya, 1996) are given per DETIK
+  // (Liter/detik/hektar, Liter/orang/detik); those need an extra ×86400
+  // (seconds per day) before the /1000 conversion to m3/hari.
+  const literPerHari = ref.perDetik ? (ref.nilai * 86400) : ref.nilai;
+  return (paNum(row.jumlahUnit) * literPerHari) / 1000;
 }
 
 function paAirLimbah(row){
@@ -3754,29 +3958,44 @@ function renderPenggunaanAirPage(){
     const airLimbah = paAirLimbah(row);
     totalBaku += airBaku;
     totalLimbah += airLimbah;
-    const sniOpts = SNI_PEMAKAIAN_AIR.map((s,i)=>`<option value="${i}" ${String(row.sniIdx)===String(i)?'selected':''}>${escH(s.label)} (${s.nilai} ${escH(s.satuan)})</option>`).join('');
+    // Group SNI options by their reference source so the dropdown clearly
+    // separates SNI 03-7065-2005 from the various Ditjen Cipta Karya (1996) tables.
+    const sniGroups = {};
+    const sniGroupOrder = [];
+    SNI_PEMAKAIAN_AIR.forEach((s,i)=>{
+      const grp = s.sumber || 'Lainnya';
+      if(!sniGroups[grp]){ sniGroups[grp] = []; sniGroupOrder.push(grp); }
+      sniGroups[grp].push(i);
+    });
+    const sniOpts = sniGroupOrder.map(grp=>{
+      const opts = sniGroups[grp].map(i=>{
+        const s = SNI_PEMAKAIAN_AIR[i];
+        return `<option value="${i}" ${String(row.sniIdx)===String(i)?'selected':''}>${escH(s.label)} (${s.nilai} ${escH(s.satuan)})</option>`;
+      }).join('');
+      return `<optgroup label="${escH(grp)}">${opts}</optgroup>`;
+    }).join('');
 
     const sumberCell = row.sumberMode==='sni'
       ? `<div class="pa-mode-toggle">
-           <button type="button" class="pa-mode-btn active" onclick="paSetSumberMode(${row.id},'sni')">SNI 03-7065-2005</button>
+           <button type="button" class="pa-mode-btn active" onclick="paSetSumberMode(${row.id},'sni')">Standar</button>
            <button type="button" class="pa-mode-btn" onclick="paSetSumberMode(${row.id},'manual')">Manual</button>
          </div>
          <select id="pa${row.id}_sniIdx" onchange="paRecalcRow(${row.id})">${sniOpts}</select>
          <input id="pa${row.id}_jumlahUnit" type="text" inputmode="decimal" placeholder="Jumlah unit/orang" value="${escH(row.jumlahUnit)}" oninput="paRecalcRow(${row.id})" style="margin-top:5px;">`
       : `<div class="pa-mode-toggle">
-           <button type="button" class="pa-mode-btn" onclick="paSetSumberMode(${row.id},'sni')">SNI 03-7065-2005</button>
+           <button type="button" class="pa-mode-btn" onclick="paSetSumberMode(${row.id},'sni')">Standar</button>
            <button type="button" class="pa-mode-btn active" onclick="paSetSumberMode(${row.id},'manual')">Manual</button>
          </div>
          <input id="pa${row.id}_airBakuManual" type="text" inputmode="decimal" placeholder="Isi air baku (m³/hari)" value="${escH(row.airBakuManual)}" oninput="paRecalcRow(${row.id})">`;
 
-    const bakuCell = `<input type="text" class="pa-auto" readonly value="${paFmt(airBaku)} m³/hari">`;
+    const bakuCell = `<input id="pa${row.id}_bakuOut" type="text" class="pa-auto" readonly value="${paFmt(airBaku)} m³/hari">`;
 
     const limbahCell = row.limbahMode==='template'
       ? `<div class="pa-mode-toggle">
            <button type="button" class="pa-mode-btn active" onclick="paSetLimbahMode(${row.id},'template')">80% (otomatis)</button>
            <button type="button" class="pa-mode-btn" onclick="paSetLimbahMode(${row.id},'manual')">Manual</button>
          </div>
-         <input type="text" class="pa-auto" readonly value="${paFmt(airLimbah)} m³/hari">`
+         <input id="pa${row.id}_limbahOut" type="text" class="pa-auto" readonly value="${paFmt(airLimbah)} m³/hari">`
       : `<div class="pa-mode-toggle">
            <button type="button" class="pa-mode-btn" onclick="paSetLimbahMode(${row.id},'template')">80% (otomatis)</button>
            <button type="button" class="pa-mode-btn active" onclick="paSetLimbahMode(${row.id},'manual')">Manual</button>
@@ -3817,38 +4036,191 @@ function renderPenggunaanAirPage(){
 // ── REKAP AIR LIMBAH PER UNIT IPAL ─────────────────
 function renderPaRecap(){
   const wrap = document.getElementById('paRecapWrap');
-  if(!wrap) return;
-  if(!paRows.length){ wrap.innerHTML=''; return; }
+  if(wrap){
+    if(!paRows.length){ wrap.innerHTML=''; }
+    else if(!ipals.length){ wrap.innerHTML=''; }
+    else {
+      // Group total air limbah (m3/hari) per ipalId
+      const perIpal = {};
+      let unassigned = 0;
+      paRows.forEach(row=>{
+        const limbah = paAirLimbah(row);
+        if(row.ipalId){
+          perIpal[row.ipalId] = (perIpal[row.ipalId]||0) + limbah;
+        } else {
+          unassigned += limbah;
+        }
+      });
 
-  // Group total air limbah (m3/hari) per ipalId
-  const perIpal = {};
-  let unassigned = 0;
-  paRows.forEach(row=>{
-    const limbah = paAirLimbah(row);
-    if(row.ipalId){
-      perIpal[row.ipalId] = (perIpal[row.ipalId]||0) + limbah;
-    } else {
-      unassigned += limbah;
+      const cards = ipals.map(ip=>{
+        const total = perIpal[ip.id] || 0;
+        const nSrc = paRows.filter(r=>String(r.ipalId)===String(ip.id)).length;
+        return `<div class="pa-recap-card">
+          <div class="pa-recap-name">${escH(ip.name)}</div>
+          <div class="pa-recap-val">${paFmt(total)}<span class="pa-recap-unit">m³/hari</span></div>
+          <div class="pa-recap-meta">${nSrc} kegiatan/fasilitas ditugaskan</div>
+        </div>`;
+      }).join('');
+
+      wrap.innerHTML = `
+        <div class="pa-recap-hd">Rekap Air Limbah per Unit IPAL</div>
+        <div class="pa-recap-sub">Total timbulan air limbah (m³/hari) yang ditugaskan ke masing-masing unit pengolahan/IPAL.</div>
+        <div class="pa-recap-grid">${cards}</div>
+        ${unassigned>0 ? `<div class="pa-recap-unassigned">⚠️ <strong>${paFmt(unassigned)} m³/hari</strong> dari kegiatan/fasilitas belum ditugaskan ke Unit IPAL Tujuan manapun.</div>` : ''}
+      `;
     }
+  }
+
+  // Keep the "Debit Total (Q)" field on the Data IPAL page in sync whenever
+  // it's set to "Otomatis (dari Penggunaan Air)", since assignments/values
+  // here directly change that computed total.
+  if(typeof renderQTotalField==='function') renderQTotalField();
+
+  renderPaDiagram();
+}
+
+// ── DIAGRAM NERACA AIR: Sumber Air Limbah → Unit IPAL Tujuan ─────────
+// Draws a simple Sankey-style flow diagram (pure SVG, no external lib):
+// left column = each Penggunaan Air row (source of wastewater),
+// right column = each IPAL, with flow bands sized proportionally to the
+// amount of air limbah (m3/hari) flowing from that source to that IPAL.
+// An extra "Belum Ditugaskan" node on the right catches unassigned sources.
+function paDiagramColor(i){
+  const palette = ['#1e3a5f','#00897b','#5e35b1','#e65100','#00acc1','#c62828','#6d4c41','#3949ab','#00796b','#8e24aa'];
+  return palette[i % palette.length];
+}
+
+function renderPaDiagram(){
+  const wrap = document.getElementById('paDiagramWrap');
+  if(!wrap) return;
+
+  if(!paRows.length){
+    wrap.innerHTML = '';
+    return;
+  }
+
+  // Only include sources that actually produce a positive air-limbah value
+  const sources = paRows
+    .map(row=>({ row, nama: row.nama || '(tanpa nama)', limbah: paAirLimbah(row) }))
+    .filter(s=>s.limbah > 0);
+
+  if(!sources.length){
+    wrap.innerHTML = `
+      <div class="pa-diagram-hd">Diagram Neraca Air: Sumber Air Limbah → Unit IPAL Tujuan</div>
+      <div class="pa-diagram-sub">Visualisasi aliran timbulan air limbah (m³/hari) dari tiap kegiatan/fasilitas menuju unit IPAL tujuannya.</div>
+      <div class="pa-diagram-box"><div class="pa-diagram-empty">Belum ada nilai air limbah untuk digambarkan. Isi kebutuhan air baku/limbah pada tabel di atas terlebih dahulu.</div></div>
+    `;
+    return;
+  }
+
+  // Build right-side nodes: one per IPAL that has at least one assignment,
+  // in the same order as the `ipals` array, plus "Belum Ditugaskan" last if needed.
+  const rightNodes = [];
+  ipals.forEach(ip=>{
+    const total = sources.filter(s=>String(s.row.ipalId)===String(ip.id)).reduce((sum,s)=>sum+s.limbah,0);
+    if(total > 0) rightNodes.push({ key:String(ip.id), name: ip.name, total, unassigned:false });
+  });
+  const unassignedTotal = sources.filter(s=>!s.row.ipalId).reduce((sum,s)=>sum+s.limbah,0);
+  if(unassignedTotal > 0) rightNodes.push({ key:'__unassigned__', name:'Belum Ditugaskan', total:unassignedTotal, unassigned:true });
+
+  if(!rightNodes.length){
+    wrap.innerHTML = '';
+    return;
+  }
+
+  const grandTotal = rightNodes.reduce((s,n)=>s+n.total, 0);
+
+  // ── Layout constants ──
+  const leftX = 190, rightX = 560;
+  const nodeW = 150;
+  const rowGapLeft = 8, rowGapRight = 14;
+  const minNodeH = 26;
+  const pxPerUnit = 26; // vertical px per m3/hari (scaled below if too tall)
+  const topPad = 44;
+
+  // Raw heights proportional to flow; clamp overall drawing height to something reasonable
+  let leftHeights = sources.map(s=>Math.max(minNodeH, s.limbah*pxPerUnit));
+  let rightHeights = rightNodes.map(n=>Math.max(minNodeH, n.total*pxPerUnit));
+
+  const scaleTo = (heights, gap, maxTotal) => {
+    const total = heights.reduce((a,b)=>a+b,0) + gap*(heights.length-1);
+    if(total <= maxTotal) return heights;
+    const factor = (maxTotal - gap*(heights.length-1)) / (total - gap*(heights.length-1));
+    return heights.map(h=>Math.max(18, h*factor));
+  };
+  const MAX_H = 620;
+  leftHeights = scaleTo(leftHeights, rowGapLeft, MAX_H);
+  rightHeights = scaleTo(rightHeights, rowGapRight, MAX_H);
+
+  const leftTotalH = leftHeights.reduce((a,b)=>a+b,0) + rowGapLeft*(leftHeights.length-1);
+  const rightTotalH = rightHeights.reduce((a,b)=>a+b,0) + rowGapRight*(rightHeights.length-1);
+  const drawH = Math.max(leftTotalH, rightTotalH);
+  const svgH = topPad + drawH + 30;
+  const svgW = rightX + nodeW + 210;
+
+  // Compute Y position (top) for each left/right node, vertically centered as a block
+  let leftYs = []; { let y = topPad + (drawH-leftTotalH)/2; leftHeights.forEach(h=>{ leftYs.push(y); y += h + rowGapLeft; }); }
+  let rightYs = []; { let y = topPad + (drawH-rightTotalH)/2; rightHeights.forEach(h=>{ rightYs.push(y); y += h + rowGapRight; }); }
+
+  // Track how much of each right node's height has been "consumed" by flows drawn so far,
+  // so multiple sources landing on the same IPAL stack without overlapping.
+  const rightCursor = rightNodes.map((n,i)=>rightYs[i]);
+
+  let svg = '';
+  svg += `<svg viewBox="0 0 ${svgW} ${svgH}" width="${svgW}" height="${svgH}" xmlns="http://www.w3.org/2000/svg" font-family="inherit">`;
+
+  // Column headers
+  svg += `<text x="${leftX+nodeW/2}" y="20" text-anchor="middle" font-size="12" class="pa-flow-label">SUMBER AIR LIMBAH</text>`;
+  svg += `<text x="${rightX+nodeW/2}" y="20" text-anchor="middle" font-size="12" class="pa-flow-label">UNIT IPAL TUJUAN</text>`;
+
+  // Draw flows (bands) first, so nodes sit on top
+  sources.forEach((s,i)=>{
+    const key = s.row.ipalId ? String(s.row.ipalId) : '__unassigned__';
+    const rIdx = rightNodes.findIndex(n=>n.key===key);
+    if(rIdx === -1) return; // shouldn't happen, but guard anyway
+    // Band thickness on the right = proportional slice of that node's height
+    const thickness = rightHeights[rIdx] * (s.limbah / rightNodes[rIdx].total);
+    const y0L = leftYs[i], y1L = leftYs[i] + leftHeights[i];
+    const y0R = rightCursor[rIdx], y1R = rightCursor[rIdx] + thickness;
+    rightCursor[rIdx] += thickness;
+
+    const x0 = leftX + nodeW, x1 = rightX;
+    const midX = (x0+x1)/2;
+    const color = paDiagramColor(i);
+    const path = `M${x0},${y0L} C${midX},${y0L} ${midX},${y0R} ${x1},${y0R} L${x1},${y1R} C${midX},${y1R} ${midX},${y1L} ${x0},${y1L} Z`;
+    svg += `<path d="${path}" fill="${color}" opacity="0.28" stroke="none"><title>${escH(s.nama)} → ${escH(rightNodes[rIdx].name)}: ${paFmt(s.limbah)} m³/hari</title></path>`;
   });
 
-  if(!ipals.length){ wrap.innerHTML=''; return; }
+  // Draw left nodes (sources)
+  sources.forEach((s,i)=>{
+    const y = leftYs[i], h = leftHeights[i];
+    const color = paDiagramColor(i);
+    svg += `<rect x="${leftX}" y="${y}" width="${nodeW}" height="${h}" rx="5" fill="${color}" opacity="0.9"><title>${escH(s.nama)}: ${paFmt(s.limbah)} m³/hari</title></rect>`;
+    const label = s.nama.length > 20 ? s.nama.slice(0,19)+'…' : s.nama;
+    svg += `<text x="${leftX+8}" y="${y+h/2-3}" font-size="11.5" fill="#fff" font-weight="600">${escH(label)}</text>`;
+    svg += `<text x="${leftX+8}" y="${y+h/2+12}" font-size="10" fill="#fff" opacity="0.9">${paFmt(s.limbah)} m³/hari</text>`;
+  });
 
-  const cards = ipals.map(ip=>{
-    const total = perIpal[ip.id] || 0;
-    const nSrc = paRows.filter(r=>String(r.ipalId)===String(ip.id)).length;
-    return `<div class="pa-recap-card">
-      <div class="pa-recap-name">${escH(ip.name)}</div>
-      <div class="pa-recap-val">${paFmt(total)}<span class="pa-recap-unit">m³/hari</span></div>
-      <div class="pa-recap-meta">${nSrc} kegiatan/fasilitas ditugaskan</div>
-    </div>`;
-  }).join('');
+  // Draw right nodes (IPAL / Belum Ditugaskan)
+  rightNodes.forEach((n,i)=>{
+    const y = rightYs[i], h = rightHeights[i];
+    const cls = n.unassigned ? 'pa-node-unassigned' : 'pa-node-ipal';
+    svg += `<rect x="${rightX}" y="${y}" width="${nodeW}" height="${h}" rx="5" class="${cls}" stroke-width="1.5"><title>${escH(n.name)}: ${paFmt(n.total)} m³/hari</title></rect>`;
+    const label = n.name.length > 20 ? n.name.slice(0,19)+'…' : n.name;
+    const textCls = n.unassigned ? '' : 'pa-node-ipal-text';
+    svg += `<text x="${rightX+8}" y="${y+h/2-3}" font-size="11.5" class="${textCls}" fill="${n.unassigned?'#8a5a00':''}">${escH(label)}</text>`;
+    svg += `<text x="${rightX+8}" y="${y+h/2+12}" font-size="10" fill="${n.unassigned?'#8a5a00':'var(--muted)'}">${paFmt(n.total)} m³/hari</text>`;
+  });
+
+  // Grand total footer
+  svg += `<text x="${svgW/2}" y="${svgH-8}" text-anchor="middle" font-size="11" class="pa-flow-label">Total keseluruhan: ${paFmt(grandTotal)} m³/hari</text>`;
+
+  svg += `</svg>`;
 
   wrap.innerHTML = `
-    <div class="pa-recap-hd">Rekap Air Limbah per Unit IPAL</div>
-    <div class="pa-recap-sub">Total timbulan air limbah (m³/hari) yang ditugaskan ke masing-masing unit pengolahan/IPAL.</div>
-    <div class="pa-recap-grid">${cards}</div>
-    ${unassigned>0 ? `<div class="pa-recap-unassigned">⚠️ <strong>${paFmt(unassigned)} m³/hari</strong> dari kegiatan/fasilitas belum ditugaskan ke Unit IPAL Tujuan manapun.</div>` : ''}
+    <div class="pa-diagram-hd">Diagram Neraca Air: Sumber Air Limbah → Unit IPAL Tujuan</div>
+    <div class="pa-diagram-sub">Visualisasi aliran timbulan air limbah (m³/hari) dari tiap kegiatan/fasilitas menuju unit IPAL tujuannya. Lebar pita sebanding dengan besar debit.</div>
+    <div class="pa-diagram-box">${svg}</div>
   `;
 }
 
@@ -37143,7 +37515,7 @@ const {
   Math: MathEl, MathRun, MathFraction, MathNumerator, MathDenominator,
   MathSuperScript, createMathSuperScriptElement, createMathBase,
   createMathSuperScriptProperties, PageOrientation, TextDirection,
-  VerticalAlign, TableLayoutType,
+  VerticalAlign, TableLayoutType, ImageRun,
 } = docx;
 
 // ── FORMAT HELPERS ──────────────────────────────────────────────────────────
@@ -38822,8 +39194,188 @@ async function exportWord() {
   }
 }
 
+// ── HELPER: render grafik fluktuasi (Chart.js) ke PNG offscreen untuk docx ──
+function renderFluktChartPNG(labels, datasetsCfg, opts = {}) {
+  return new Promise((resolve) => {
+    const w = opts.width || 900, h = opts.height || 420;
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    canvas.style.position = 'fixed';
+    canvas.style.left = '-99999px';
+    canvas.style.top = '0';
+    document.body.appendChild(canvas);
+    const ctx2d = canvas.getContext('2d');
+    ctx2d.fillStyle = '#ffffff';
+    ctx2d.fillRect(0, 0, w, h);
+    const chart = new Chart(canvas, {
+      type: 'line',
+      data: { labels, datasets: datasetsCfg },
+      options: {
+        responsive: false,
+        animation: false,
+        plugins: {
+          legend: { display: true, position: 'bottom', labels: { font: { size: 11 }, boxWidth: 16 } },
+          tooltip: { enabled: false },
+          title: opts.title ? { display: true, text: opts.title, font: { size: 14, weight: 'bold' } } : undefined,
+        },
+        scales: {
+          x: { grid: { color: 'rgba(0,0,0,0.06)' }, ticks: { font: { size: 9 } }, title: { display: true, text: 'Waktu (jam)', font: { size: 10 } } },
+          y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.06)' }, ticks: { font: { size: 9 }, callback: v => fmtID(v,2) }, title: { display: true, text: 'Debit (m³/jam)', font: { size: 10 } } },
+        },
+      },
+    });
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const dataUrl = canvas.toDataURL('image/png', 1.0);
+        chart.destroy();
+        document.body.removeChild(canvas);
+        resolve(dataUrl);
+      });
+    });
+  });
+}
+
+function dataUrlToUint8(dataUrl) {
+  const base64 = dataUrl.split(',')[1];
+  const bin = atob(base64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes;
+}
+
+const IPAL_COLORS_D_GLOBAL = ['#e07b39','#059669','#7c3aed','#dc2626','#0891b2','#d97706','#9333ea','#0e7490','#64748b','#be185d'];
+
+// Helper: render grafik batang (bar chart) generik ke PNG, untuk laporan docx
+function renderBarChartPNG(labels, data, opts = {}) {
+  return new Promise((resolve) => {
+    const w = opts.width || 900, h = opts.height || 420;
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    canvas.style.position = 'fixed';
+    canvas.style.left = '-99999px';
+    canvas.style.top = '0';
+    document.body.appendChild(canvas);
+    const ctx2d = canvas.getContext('2d');
+    ctx2d.fillStyle = '#ffffff';
+    ctx2d.fillRect(0, 0, w, h);
+    const colors = opts.colors || labels.map((_,i)=> IPAL_COLORS_D_GLOBAL[i % IPAL_COLORS_D_GLOBAL.length]);
+    const chart = new Chart(canvas, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: opts.datasetLabel || 'Total',
+          data,
+          backgroundColor: colors,
+          borderColor: colors,
+          borderWidth: 1,
+          borderRadius: 4,
+          maxBarThickness: 60,
+        }],
+      },
+      options: {
+        responsive: false,
+        animation: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false },
+          title: opts.title ? { display: true, text: opts.title, font: { size: 14, weight: 'bold' } } : undefined,
+        },
+        scales: {
+          x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+          y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.06)' }, ticks: { font: { size: 9 }, callback: v => fmtID(v,2) }, title: { display: true, text: opts.yLabel || 'Air Limbah (m³/hari)', font: { size: 10 } } },
+        },
+      },
+      plugins: [{
+        id: 'barValueLabels',
+        afterDatasetsDraw(c) {
+          const {ctx} = c;
+          c.getDatasetMeta(0).data.forEach((bar, i) => {
+            const val = data[i];
+            ctx.save();
+            ctx.font = '10px Arial';
+            ctx.fillStyle = '#222222';
+            ctx.textAlign = 'center';
+            ctx.fillText(fmtID(val,2), bar.x, bar.y - 6);
+            ctx.restore();
+          });
+        },
+      }],
+    });
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const dataUrl = canvas.toDataURL('image/png', 1.0);
+        chart.destroy();
+        document.body.removeChild(canvas);
+        resolve(dataUrl);
+      });
+    });
+  });
+}
+
+// Helper: bangun tabel docx untuk fluktuasi per jam (split 12|12 kolom, seperti UI)
+function buildFluktTableDocx(hourlyQ, hourlyPct, peakHour) {
+  const hours = Array.from({length:24},(_,i)=>i);
+  const L = hours.slice(0,12), R = hours.slice(12,24);
+  const sumQ = hourlyQ.reduce((a,b)=>a+b,0);
+  const sumPct = hourlyPct.reduce((a,b)=>a+b,0);
+  const HDRF = ['Jam','Debit (m³/jam)','%','Jam','Debit (m³/jam)','%'];
+  const headerRow = new TableRow({
+    tableHeader: true,
+    children: HDRF.map((h,i)=> new TableCell({
+      width: { size: Math.round(100/6), type: WidthType.PERCENTAGE },
+      shading: { type: ShadingType.CLEAR, fill: 'FFFFFF' },
+      borders: { top:{style:BorderStyle.SINGLE,size:4,color:'000000'}, bottom:{style:BorderStyle.SINGLE,size:4,color:'000000'}, left:{style:BorderStyle.SINGLE,size:4,color:'000000'}, right:{style:BorderStyle.SINGLE,size:2,color:'888888'} },
+      margins: { top: 50, bottom: 50, left: 60, right: 60 },
+      children: [new Paragraph({ children: [tx(h, { bold:true, size:16 })], alignment: AlignmentType.CENTER })],
+    })),
+  });
+  const bodyRows = L.map((h, i) => {
+    const rh = R[i];
+    const lPeak = h === peakHour, rPeak = rh === peakHour;
+    const cells = [
+      { text: String(h).padStart(2,'0')+'.00', align: AlignmentType.CENTER, peak:false },
+      { text: fmtID(hourlyQ[h],3), align: AlignmentType.CENTER, peak: lPeak },
+      { text: fmtID(hourlyPct[h],1), align: AlignmentType.CENTER, peak: lPeak },
+      { text: String(rh).padStart(2,'0')+'.00', align: AlignmentType.CENTER, peak:false },
+      { text: fmtID(hourlyQ[rh],3), align: AlignmentType.CENTER, peak: rPeak },
+      { text: fmtID(hourlyPct[rh],1), align: AlignmentType.CENTER, peak: rPeak },
+    ];
+    return new TableRow({
+      children: cells.map(c => new TableCell({
+        width: { size: Math.round(100/6), type: WidthType.PERCENTAGE },
+        shading: { type: ShadingType.CLEAR, fill: c.peak ? 'FDF6D8' : 'FFFFFF' },
+        borders: { top:{style:BorderStyle.SINGLE,size:2,color:'999999'}, bottom:{style:BorderStyle.SINGLE,size:2,color:'999999'}, left:{style:BorderStyle.SINGLE,size:2,color:'999999'}, right:{style:BorderStyle.SINGLE,size:2,color:'999999'} },
+        margins: { top: 40, bottom: 40, left: 60, right: 60 },
+        children: [new Paragraph({ children: [tx(c.text, { size: 16, bold: c.peak })], alignment: c.align })],
+      })),
+    });
+  });
+  const totalRow = new TableRow({
+    children: [
+      new TableCell({ width:{size:Math.round(100/6)*2, type:WidthType.PERCENTAGE}, columnSpan:2,
+        borders:{top:{style:BorderStyle.SINGLE,size:4,color:'000000'},bottom:{style:BorderStyle.SINGLE,size:4,color:'000000'},left:{style:BorderStyle.SINGLE,size:4,color:'000000'},right:{style:BorderStyle.SINGLE,size:2,color:'888888'}},
+        shading:{type:ShadingType.CLEAR, fill:'F2F2F2'}, margins:{top:50,bottom:50,left:60,right:60},
+        children:[new Paragraph({ children:[tx('TOTAL', {bold:true, size:16})], alignment: AlignmentType.RIGHT })] }),
+      new TableCell({ width:{size:Math.round(100/6), type:WidthType.PERCENTAGE},
+        borders:{top:{style:BorderStyle.SINGLE,size:4,color:'000000'},bottom:{style:BorderStyle.SINGLE,size:4,color:'000000'},left:{style:BorderStyle.SINGLE,size:2,color:'888888'},right:{style:BorderStyle.SINGLE,size:2,color:'888888'}},
+        shading:{type:ShadingType.CLEAR, fill:'F2F2F2'}, margins:{top:50,bottom:50,left:60,right:60},
+        children:[new Paragraph({ children:[tx(fmtID(sumPct,1), {bold:true, size:16})], alignment: AlignmentType.CENTER })] }),
+      new TableCell({ width:{size:Math.round(100/6)*3, type:WidthType.PERCENTAGE}, columnSpan:3,
+        borders:{top:{style:BorderStyle.SINGLE,size:4,color:'000000'},bottom:{style:BorderStyle.SINGLE,size:4,color:'000000'},left:{style:BorderStyle.SINGLE,size:2,color:'888888'},right:{style:BorderStyle.SINGLE,size:4,color:'000000'}},
+        shading:{type:ShadingType.CLEAR, fill:'F2F2F2'}, margins:{top:50,bottom:50,left:60,right:60},
+        children:[new Paragraph({ children:[tx('Σ debit 24 jam = '+fmtID(sumQ,3)+' m³/hari', {bold:true, size:15})] })] }),
+    ],
+  });
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    layout: TableLayoutType.FIXED,
+    rows: [headerRow, ...bodyRows, totalRow],
+  });
+}
+
 // ── EXPORT: LAPORAN PENGGUNAAN AIR (standalone, .docx) ─────────────────────
-function buildPenggunaanAirReport() {
+async function buildPenggunaanAirReport() {
   const tgl = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
 
   const coverChildren = [];
@@ -38871,7 +39423,7 @@ function buildPenggunaanAirReport() {
   }));
   for (let i = 0; i < 4; i++) coverChildren.push(gap(200));
   coverChildren.push(new Paragraph({
-    children: [tx('Dokumen ini dibuat menggunakan Wastewater Tracking. Kebutuhan air baku dihitung mengacu SNI 03-7065-2005 (Tabel 1), kecuali diisi manual.', { size: 16, color: '888888', font: 'Times New Roman' })],
+    children: [tx('Dokumen ini dibuat menggunakan Wastewater Tracking. Kebutuhan air baku dihitung mengacu standar (SNI 03-7065-2005 atau Ditjen Cipta Karya, 1996), kecuali diisi manual.', { size: 16, color: '888888', font: 'Times New Roman' })],
     alignment: AlignmentType.CENTER,
     border: { top: { style: BorderStyle.SINGLE, size: 4, color: 'AAAAAA' } },
     spacing: { before: 120, after: 0 },
@@ -38906,7 +39458,7 @@ function buildPenggunaanAirReport() {
     const sniRef = SNI_PEMAKAIAN_AIR[row.sniIdx] || SNI_PEMAKAIAN_AIR[0];
     const sumberLabel = row.sumberMode==='manual'
       ? 'Manual'
-      : sniRef.label + ' (SNI 03-7065-2005)';
+      : `${sniRef.label} (${sniRef.sumber || 'SNI 03-7065-2005'})`;
     const standarLabel = row.sumberMode==='manual'
       ? '—'
       : `${fmtID(sniRef.nilai,0)} ${sniRef.satuan}`;
@@ -38967,6 +39519,30 @@ function buildPenggunaanAirReport() {
     rows: [headerRow1, ...dataRows1, ...(paRows.length ? [totalRow1] : [])],
   }));
 
+  // ── Footnote: referensi sumber standar yang benar-benar dipakai ──
+  // Only lists sources actually selected on rows using the 'sni' (standar)
+  // mode; rows filled in manually don't reference any standard.
+  const usedSumberSet = new Set();
+  paRows.forEach(row=>{
+    if(row.sumberMode==='manual') return;
+    const ref = SNI_PEMAKAIAN_AIR[row.sniIdx] || SNI_PEMAKAIAN_AIR[0];
+    usedSumberSet.add(ref.sumber || 'SNI 03-7065-2005');
+  });
+  if(usedSumberSet.size){
+    bodyChildren.push(gap(60));
+    bodyChildren.push(new Paragraph({
+      children: [tx('Catatan: Nilai standar kebutuhan air baku pada tabel di atas mengacu pada referensi berikut, sesuai sumber yang dipilih untuk masing-masing kegiatan/fasilitas:', { size: 17, italic:true, color:'555555' })],
+      spacing: { before: 0, after: 40 },
+    }));
+    [...usedSumberSet].sort().forEach(src=>{
+      bodyChildren.push(new Paragraph({
+        children: [tx(`•  ${src}`, { size: 17, italic:true, color:'555555' })],
+        indent: { left: 260 },
+        spacing: { before: 0, after: 20 },
+      }));
+    });
+  }
+
   // ── BAB 2: Rekap per Unit IPAL Tujuan ──
   bodyChildren.push(gap(160));
   bodyChildren.push(h2('BAB 2.  Rekap Air Limbah per Unit IPAL Tujuan'));
@@ -39022,6 +39598,29 @@ function buildPenggunaanAirReport() {
     rows: [headerRow2, ...dataRows2],
   }));
 
+  // ── Grafik Total Air Limbah per Unit IPAL ──
+  const ipalsWithData = ipals.filter(ip => (perIpal[ip.id] || 0) > 0);
+  if (ipalsWithData.length && typeof Chart !== 'undefined') {
+    const chartLabels = ipalsWithData.map(ip => ip.name).concat(unassigned > 0 ? ['Belum Ditugaskan'] : []);
+    const chartData = ipalsWithData.map(ip => perIpal[ip.id] || 0).concat(unassigned > 0 ? [unassigned] : []);
+    const chartColors = ipalsWithData.map((_,i) => IPAL_COLORS_D_GLOBAL[i % IPAL_COLORS_D_GLOBAL.length]).concat(unassigned > 0 ? ['#999999'] : []);
+
+    bodyChildren.push(gap(60));
+    bodyChildren.push(new Paragraph({
+      children: [tx('Grafik Total Air Limbah per Unit IPAL Tujuan', { bold: true, size: 19 })],
+      spacing: { before: 40, after: 60 },
+    }));
+    const pngIpalTotal = await renderBarChartPNG(chartLabels, chartData, {
+      title: 'Total Air Limbah per Unit IPAL (m³/hari)',
+      yLabel: 'Air Limbah (m³/hari)',
+      colors: chartColors,
+    });
+    bodyChildren.push(new Paragraph({
+      children: [ new ImageRun({ data: dataUrlToUint8(pngIpalTotal), transformation: { width: 480, height: 224 } }) ],
+      alignment: AlignmentType.CENTER, spacing: { before: 60, after: 60 },
+    }));
+  }
+
   if (unassigned > 0) {
     bodyChildren.push(gap(100));
     bodyChildren.push(new Paragraph({
@@ -39037,16 +39636,171 @@ function buildPenggunaanAirReport() {
   bodyChildren.push(new Paragraph({
     children: [
       tx('Catatan: ', { bold: true, size: 17, color: '555555' }),
-      tx('Kebutuhan air baku dihitung otomatis mengacu SNI 03-7065-2005 (Tabel 1) berdasarkan jumlah unit/orang, kecuali diisi secara manual. Timbulan air limbah diasumsikan 80% dari kebutuhan air baku, kecuali diisi secara manual.', { size: 17, color: '555555' }),
+      tx('Kebutuhan air baku dihitung otomatis mengacu standar (SNI 03-7065-2005 atau Ditjen Cipta Karya, 1996) berdasarkan jumlah unit/orang, kecuali diisi secara manual. Timbulan air limbah diasumsikan 80% dari kebutuhan air baku, kecuali diisi secara manual.', { size: 17, color: '555555' }),
     ],
     spacing: { before: 0, after: 80 },
   }));
+
+  // ── BAB 3: Fluktuasi Air Limbah ──
+  const fluktChildren = [];
+  const IPAL_COLORS_D = ['#e07b39','#059669','#7c3aed','#dc2626','#0891b2','#d97706','#9333ea','#0e7490','#64748b','#be185d'];
+  const hasFlukt = (typeof ipals !== 'undefined' && ipals.length && typeof buildSrcData === 'function');
+
+  if (hasFlukt) {
+    fluktChildren.push(new Paragraph({
+      children: [new TextRun({ text: 'BAB 3.  Fluktuasi Air Limbah', bold: true, underline: {}, size: 24, color: '000000', font: 'Times New Roman' })],
+      heading: HeadingLevel.HEADING_2,
+      spacing: { before: 0, after: 120 },
+    }));
+    fluktChildren.push(gap(60));
+    fluktChildren.push(new Paragraph({
+      children: [tx('Bab ini menyajikan distribusi debit air limbah per jam (m³/jam dan %) untuk setiap Unit IPAL Tujuan, berdasarkan profil karakter kegiatan/fasilitas yang ditugaskan padanya, serta grafik dan tabel gabungan seluruh unit.', { size: 20 })],
+      alignment: AlignmentType.JUSTIFIED, spacing: { after: 120 },
+    }));
+
+    const hours = Array.from({length:24},(_,i)=>i);
+    const xLabels = hours.map(h=>`${String(h).padStart(2,'0')}.00`);
+
+    // ── 3.1 Gabungan seluruh IPAL ──
+    const unassignedSrc = (typeof buildUnassignedSrcData==='function') ? buildUnassignedSrcData() : [];
+    const allSrc = ipals.flatMap(ip => buildSrcData(ip)).concat(unassignedSrc);
+
+    if (allSrc.length) {
+      const { hourlyQ, hourlyPct, totalQ } = calcWeightedHourly(allSrc);
+      const peakHour = hourlyQ.indexOf(Math.max(...hourlyQ));
+
+      const perIpalData = ipals.map(ip => {
+        const sd = buildSrcData(ip);
+        if (!sd.length) return null;
+        const { hourlyQ: hq, totalQ: tq } = calcWeightedHourly(sd);
+        return { ipal: ip, hourlyQ: hq, totalQ: tq };
+      }).filter(Boolean);
+      if (unassignedSrc.length) {
+        const { hourlyQ: hq, totalQ: tq } = calcWeightedHourly(unassignedSrc);
+        perIpalData.push({ ipal: { id:'__unassigned__', name:'Belum Ditugaskan' }, hourlyQ: hq, totalQ: tq });
+      }
+
+      fluktChildren.push(h3('Fluktuasi Gabungan Seluruh Unit IPAL', '3.1'));
+      fluktChildren.push(new Paragraph({
+        children: [tx(`Total seluruh air limbah: ${fmtID(totalQ,3)} m³/hari dari ${perIpalData.filter(d=>d.ipal.id!=='__unassigned__').length} unit IPAL aktif. Jam puncak: ${String(peakHour).padStart(2,'0')}.00–${String((peakHour+1)%24).padStart(2,'0')}.00 ≈ ${fmtID(hourlyQ[peakHour],3)} m³/jam (${fmtID(hourlyPct[peakHour],1)}% debit harian total).`, { size: 19 })],
+        alignment: AlignmentType.JUSTIFIED, spacing: { after: 100 },
+      }));
+
+      const datasetsAll = [
+        { label: 'Total Gabungan', data: hourlyQ, borderColor: '#1e3a5f', backgroundColor: 'transparent', borderWidth: 3, fill: false, tension: 0.45, pointRadius: 2 },
+        ...perIpalData.map((d,i) => ({
+          label: d.ipal.name, data: d.hourlyQ,
+          borderColor: IPAL_COLORS_D[i % IPAL_COLORS_D.length], backgroundColor: 'transparent',
+          borderWidth: 1.6, fill: false, tension: 0.45, pointRadius: 1.2, borderDash: [5,4],
+        })),
+      ];
+      const pngAll = await renderFluktChartPNG(xLabels, datasetsAll, { title: 'Grafik Fluktuasi — Gabungan Semua IPAL' });
+      fluktChildren.push(new Paragraph({
+        children: [ new ImageRun({ data: dataUrlToUint8(pngAll), transformation: { width: 560, height: 261 } }) ],
+        alignment: AlignmentType.CENTER, spacing: { before: 60, after: 120 },
+      }));
+
+      fluktChildren.push(new Paragraph({
+        children: [tx('Tabel Fluktuasi — Gabungan Semua IPAL', { bold: true, size: 19 })],
+        spacing: { before: 40, after: 60 },
+      }));
+      fluktChildren.push(buildFluktTableDocx(hourlyQ, hourlyPct, peakHour));
+
+      if (unassignedSrc.length) {
+        fluktChildren.push(gap(80));
+        fluktChildren.push(new Paragraph({
+          children: [tx(`Catatan: Terdapat ${unassignedSrc.length} sumber (${fmtID(unassignedSrc.reduce((s,d)=>s+d.q,0),2)} m³/hari) yang belum ditugaskan ke Unit IPAL manapun, namun tetap dihitung dalam total gabungan di atas.`, { size: 17, italic: true, color: 'A05A00' })],
+          spacing: { before: 0, after: 60 },
+        }));
+      }
+    }
+
+    // ── 3.2+ Per Unit IPAL ──
+    let subNo = 2;
+    for (const ip of ipals) {
+      const srcData = buildSrcData(ip);
+      if (!srcData.length) continue;
+      const { hourlyQ, hourlyPct, totalQ } = calcWeightedHourly(srcData);
+      const peakHour = hourlyQ.indexOf(Math.max(...hourlyQ));
+      const usedProfiles = [...new Set(srcData.map(d=>d.profileKey))];
+
+      fluktChildren.push(gap(120));
+      fluktChildren.push(h3(`Fluktuasi Unit IPAL: ${ip.name}`, `3.${subNo}`));
+      subNo++;
+
+      fluktChildren.push(new Paragraph({
+        children: [tx(`Debit air limbah ke ${ip.name}: ${fmtID(totalQ,3)} m³/hari dari ${srcData.length} sumber. Jam puncak: ${String(peakHour).padStart(2,'0')}.00–${String((peakHour+1)%24).padStart(2,'0')}.00 ≈ ${fmtID(hourlyQ[peakHour],3)} m³/jam (${fmtID(hourlyPct[peakHour],1)}%).`, { size: 19 })],
+        alignment: AlignmentType.JUSTIFIED, spacing: { after: 100 },
+      }));
+
+      const datasetsIpal = [
+        ...srcData.map(d => ({
+          label: `${d.nama} (${d.profile.label})`,
+          data: hours.map(h => d.q*(d.profile.pct[h]/100)),
+          borderColor: d.profile.color, backgroundColor: 'transparent',
+          borderWidth: 1.4, fill: false, tension: 0.45, pointRadius: 1.2,
+        })),
+        { label: `Total — ${ip.name}`, data: hourlyQ, borderColor: '#1e3a5f', backgroundColor: 'transparent', borderWidth: 2.4, fill: false, tension: 0.45, pointRadius: 2 },
+      ];
+      const pngIpal = await renderFluktChartPNG(xLabels, datasetsIpal, { title: `Grafik Fluktuasi — ${ip.name}` });
+      fluktChildren.push(new Paragraph({
+        children: [ new ImageRun({ data: dataUrlToUint8(pngIpal), transformation: { width: 560, height: 261 } }) ],
+        alignment: AlignmentType.CENTER, spacing: { before: 60, after: 120 },
+      }));
+
+      // ── Grafik tambahan: hanya garis Total (tanpa per-sumber) ──
+      const datasetsIpalTotalOnly = [
+        { label: `Total — ${ip.name}`, data: hourlyQ, borderColor: '#1e3a5f', backgroundColor: 'transparent', borderWidth: 2.4, fill: false, tension: 0.45, pointRadius: 2 },
+      ];
+      const pngIpalTotalOnly = await renderFluktChartPNG(xLabels, datasetsIpalTotalOnly, { title: `Grafik Fluktuasi — ${ip.name}` });
+      fluktChildren.push(new Paragraph({
+        children: [ new ImageRun({ data: dataUrlToUint8(pngIpalTotalOnly), transformation: { width: 560, height: 261 } }) ],
+        alignment: AlignmentType.CENTER, spacing: { before: 60, after: 120 },
+      }));
+
+      fluktChildren.push(new Paragraph({
+        children: [tx(`Tabel Fluktuasi — ${ip.name}`, { bold: true, size: 19 })],
+        spacing: { before: 40, after: 60 },
+      }));
+      fluktChildren.push(buildFluktTableDocx(hourlyQ, hourlyPct, peakHour));
+
+      fluktChildren.push(gap(80));
+      fluktChildren.push(new Paragraph({
+        children: [tx('Profil karakter sumber yang digunakan:', { bold: true, size: 18, color: '444444' })],
+        spacing: { before: 0, after: 40 },
+      }));
+      usedProfiles.forEach(k => {
+        const prof = FLUKT_PROFILES[k];
+        const st = srcData.filter(d => d.profileKey === k);
+        fluktChildren.push(new Paragraph({
+          children: [
+            tx(`•  ${prof.label}`, { bold: true, size: 17, color: '333333' }),
+            tx(` → ${st.map(d=>d.nama).join(', ')}`, { size: 17, color: '555555' }),
+          ],
+          indent: { left: 200 }, spacing: { before: 0, after: 20 },
+        }));
+        fluktChildren.push(new Paragraph({
+          children: [tx(prof.desc, { size: 16, italic: true, color: '666666' })],
+          indent: { left: 200 }, spacing: { before: 0, after: 60 },
+        }));
+      });
+    }
+
+    fluktChildren.push(gap(120));
+    fluktChildren.push(new Paragraph({
+      children: [
+        tx('Catatan: ', { bold: true, size: 17, color: '555555' }),
+        tx('Profil fluktuasi dideteksi otomatis dari nama kegiatan/fasilitas. Untuk sumber majemuk pada satu Unit IPAL, kurva gabungan merupakan penjumlahan tertimbang terhadap debit tiap sumber (Q_jam(h) = Σ[Qi × %profili(h)/100]); sumber berdebit lebih besar mendominasi bentuk kurva gabungan.', { size: 17, color: '555555' }),
+      ],
+      spacing: { before: 0, after: 80 },
+    }));
+  }
 
   return new Document({
     styles: { default: { document: { run: { font:'Times New Roman', size:20 } } } },
     sections: [
       { properties: { page: { margin: { top:1800, bottom:1800, left:1800, right:1440 } } }, children: coverChildren },
-      { properties: { page: { margin: { top:1440, bottom:1440, left:1440, right:1080 } } }, children: bodyChildren },
+      { properties: { page: { margin: { top:1440, bottom:1440, left:1440, right:1080 } } }, children: [...bodyChildren, ...(hasFlukt ? fluktChildren : [])] },
     ],
   });
 }
@@ -39065,8 +39819,8 @@ async function exportPenggunaanAirWord() {
       if (btn) btn.disabled = false;
       return;
     }
-    if (status) status.textContent = 'Membangun dokumen Word...';
-    const doc = buildPenggunaanAirReport();
+    if (status) status.textContent = 'Membangun dokumen Word (termasuk grafik fluktuasi)...';
+    const doc = await buildPenggunaanAirReport();
     if (status) status.textContent = 'Mengemas file...';
     const blob = await docx.Packer.toBlob(doc);
     const url = URL.createObjectURL(blob);
@@ -39162,6 +39916,485 @@ function applyInfluent(param) {
   removalInfluent[param] = inp.value;
   renderRemovalRecap();
 }
+
+// ═══════════════════════════════════════════════════════
+// FLUKTUASI AIR LIMBAH — v3
+// ═══════════════════════════════════════════════════════
+
+const FLUKT_PROFILES = {
+  ibadah: {
+    label: 'Ibadah (Masjid/Mushola)', color: '#059669',
+    desc: 'Puncak pada 5 waktu sholat: Subuh (04-05), Dzuhur (12-13), Ashar (15-16), Maghrib (18-19), Isya (20-21). Sumber: air wudhu dan toilet. Di luar waktu sholat sangat sepi.',
+    pct: [0.1,0.1,0.1,0.1,6.1,9.2,2.0,0.5,0.5,0.4,0.4,0.6, 11.7,7.1,1.2,10.2,7.1,1.2,13.1,9.2,10.2,6.1,2.0,0.8],
+    keywords: ['mushola','masjid','peribadatan','mesjid','ibadah','surau']
+  },
+  hunian: {
+    label: 'Mess/Camp/Hunian', color: '#1d4ed8',
+    desc: 'Dua puncak: pagi (06-08, mandi + toilet sebelum kerja) dan sore-malam (17-20, mandi sepulang kerja). Siang rendah karena penghuni di lapangan. Dini hari mendekati nol.',
+    pct: [0.2,0.1,0.1,0.1,0.4,2.4,10.2,11.6,7.3,4.4,2.9,2.9, 4.4,3.9,3.4,3.9,5.4,8.8,10.7,7.8,4.4,2.7,1.4,0.6],
+    keywords: ['mess','camp','asrama','hunian','penginapan','barak','kost','camp area']
+  },
+  kantor: {
+    label: 'Kantor/Perkantoran', color: '#7c3aed',
+    desc: 'Aktif jam kerja (07-17). Puncak pagi saat masuk (07-09) dan siang istirahat makan (11-13). Malam sangat sepi. Sumber: toilet dan wastafel staf.',
+    pct: [0.1,0.1,0.1,0.1,0.1,0.3,1.5,5.0,10.5,9.5,9.0,11.0, 10.5,10.0,9.0,8.5,6.5,4.5,1.5,0.8,0.5,0.4,0.3,0.2],
+    keywords: ['kantor','office','admin','administrasi','perkantoran','gedung','main op office','container office']
+  },
+  dapur: {
+    label: 'Dapur/Kantin/Dining', color: '#d97706',
+    desc: 'Tiga puncak sesuai siklus makan: sarapan (05-08), makan siang (10-13), makan malam (16-19). Sumber: air cucian peralatan masak dan makan.',
+    pct: [0.1,0.1,0.1,0.1,1.0,4.5,9.5,9.0,5.5,2.5,3.5,9.0, 9.5,5.0,2.5,3.5,9.0,9.5,7.6,4.0,2.0,1.5,0.7,0.3],
+    keywords: ['dapur','kitchen','kantin','kafetaria','dining','makan','mess hall','catering','restoran','rumah makan']
+  },
+  laundry: {
+    label: 'Laundry', color: '#0891b2',
+    desc: 'Operasi batch jam kerja (07-16). Air limbah keluar setelah siklus cuci selesai. Mesin tidak beroperasi malam hari.',
+    pct: [0.1,0.1,0.1,0.1,0.2,0.5,2.0,7.5,13.0,13.5,13.0,12.5, 11.5,10.5,8.6,5.5,0.5,0.2,0.1,0.1,0.1,0.1,0.1,0.1],
+    keywords: ['laundry','binatu','cucian','cuci baju','linen']
+  },
+  klinik: {
+    label: 'Klinik/Poliklinik', color: '#dc2626',
+    desc: 'Aktif jam operasional klinik (07-16). Puncak pagi saat antrian pasien. Ada piket malam kecil. Sumber: toilet staf, wastafel cuci tangan, ruang perawatan.',
+    pct: [0.3,0.2,0.2,0.2,0.3,0.5,1.5,5.5,12.1,11.5,11.0,11.5, 10.5,9.9,9.4,7.4,4.4,1.4,0.5,0.4,0.3,0.3,0.3,0.4],
+    keywords: ['klinik','clinic','poliklinik','poli','kesehatan','rumah sakit','medis','puskesmas']
+  },
+  workshop: {
+    label: 'Workshop/Bengkel/Washpad', color: '#64748b',
+    desc: 'Jam kerja dengan dua sub-puncak: pagi (06-08, washpad sebelum kendaraan keluar ke lokasi) dan sore (15-17, washpad saat kendaraan kembali). Sumber: air cucian kendaraan dan bengkel.',
+    pct: [0.1,0.1,0.1,0.1,0.2,1.5,7.0,10.2,9.3,8.8,8.8,9.3, 8.8,8.3,7.8,9.3,6.8,2.4,0.5,0.2,0.1,0.1,0.1,0.1],
+    keywords: ['workshop','bengkel','pabrik','maintenance','washpad','drill rig','fabrikasi','mekanikal']
+  },
+  security: {
+    label: 'Pos Keamanan/Security', color: '#9333ea',
+    desc: 'Beroperasi 24 jam (3 shift: 07-15, 15-23, 23-07). Debit merata, sedikit naik di jam pergantian shift (07, 15, 23).',
+    pct: [3.5,3.5,3.5,3.5,3.5,4.0,5.5,5.0,4.5,4.5,4.0,4.0, 4.0,4.0,4.5,5.0,5.0,4.5,4.0,4.0,3.5,3.5,4.5,4.5],
+    keywords: ['security','pos jaga','pos keamanan','satpam','penjagaan','guard']
+  },
+  rumah: {
+    label: 'Rumah Tinggal/Perumahan', color: '#0e7490',
+    desc: 'Pola hunian keluarga. Puncak pagi (05-08, mandi pagi, cuci, toilet) dan sore-malam (17-21, mandi sore). Siang moderat.',
+    pct: [0.2,0.1,0.1,0.1,0.3,2.9,8.7,10.1,7.8,5.3,4.2,4.4, 4.9,4.4,3.9,4.4,6.3,8.7,9.2,6.3,3.9,2.1,1.0,0.7],
+    keywords: ['rumah','perumahan','rumah tinggal','rumah susun','wisma']
+  },
+  umum: {
+    label: 'Fasilitas Umum', color: '#94a3b8',
+    desc: 'Profil default untuk fasilitas yang tidak teridentifikasi secara spesifik. Distribusi moderat mengikuti pola aktivitas umum siang hari.',
+    pct: [0.8,0.5,0.4,0.4,0.8,2.0,5.5,7.6,7.5,7.0,6.6,7.0, 7.0,6.6,6.6,6.6,6.1,5.6,4.7,3.7,2.8,1.9,1.4,0.9],
+    keywords: []
+  }
+};
+
+function matchFluktProfile(nama) {
+  const n = (nama||'').toLowerCase();
+  for (const [key, prof] of Object.entries(FLUKT_PROFILES)) {
+    if (key==='umum') continue;
+    if (prof.keywords.some(kw => n.includes(kw))) return key;
+  }
+  return 'umum';
+}
+
+// 'all' = tampilkan semua IPAL gabungan
+let fluktActiveIpalId = 'all';
+let fluktChart = null;
+// Menyimpan status garis yang disembunyikan (per mode), key = label dataset
+let fluktHiddenLines = { all: {}, byIpal: {} };
+
+function fluktToggleLine(scopeKey, label) {
+  const scope = fluktHiddenLines[scopeKey] || (fluktHiddenLines[scopeKey] = {});
+  scope[label] = !scope[label];
+  if (!fluktChart) return;
+  const ds = fluktChart.data.datasets.find(d => d.label === label);
+  if (!ds) return;
+  const idx = fluktChart.data.datasets.indexOf(ds);
+  const meta = fluktChart.getDatasetMeta(idx);
+  meta.hidden = !!scope[label];
+  fluktChart.update();
+  const row = document.getElementById(`fluktChk_${scopeKey}_${idx}`);
+  if (row) row.classList.toggle('fl-line-off', !!scope[label]);
+}
+
+// Membangun HTML panel checkbox untuk kontrol tampil/sembunyi garis
+function fluktLegendPanelHtml(scopeKey, items) {
+  // items: [{label, color, dashed}]
+  return `
+    <div class="fl-legend-panel" style="display:flex;flex-wrap:wrap;gap:6px 14px;padding:10px 12px;background:var(--card);border:1px solid var(--line);border-radius:8px;margin-bottom:10px;">
+      ${items.map((it,idx)=>`
+        <label id="fluktChk_${scopeKey}_${idx}" class="fl-line-toggle" style="display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--ink-soft);cursor:pointer;user-select:none;">
+          <input type="checkbox" checked
+            onchange="fluktToggleLine('${scopeKey}', ${JSON.stringify(it.label).replace(/"/g,'&quot;')})"
+            style="accent-color:${it.color};width:14px;height:14px;cursor:pointer;">
+          <span style="display:inline-block;width:16px;height:0;border-top:${it.dashed?'2.5px dashed':'3px solid'} ${it.color};"></span>
+          <span class="fl-line-label">${escH(it.label)}</span>
+        </label>
+      `).join('')}
+    </div>
+    <style>
+      .fl-line-off .fl-line-label{ text-decoration:line-through; opacity:.5; }
+      .fl-line-off span[style*="border-top"]{ opacity:.35; }
+    </style>
+  `;
+}
+
+function calcWeightedHourly(srcData) {
+  const totalQ = srcData.reduce((s,d)=>s+d.q, 0);
+  if (!totalQ) return { hourlyQ: Array(24).fill(0), hourlyPct: Array(24).fill(0), totalQ: 0 };
+  const hourlyQ = Array.from({length:24},(_,h) =>
+    srcData.reduce((s,d) => s + d.q*(d.profile.pct[h]/100), 0)
+  );
+  return { hourlyQ, hourlyPct: hourlyQ.map(v=>v/totalQ*100), totalQ };
+}
+
+function buildSrcData(ipal) {
+  if (!ipal || typeof paRows==='undefined') return [];
+  return paRows
+    .filter(r => String(r.ipalId)===String(ipal.id))
+    .map(row => {
+      const q = paAirLimbah(row);
+      const profileKey = matchFluktProfile(row.nama);
+      return { nama: row.nama||'(tanpa nama)', q, profileKey, profile: FLUKT_PROFILES[profileKey] };
+    }).filter(d => d.q > 0);
+}
+
+// Sumber yang belum ditugaskan ke unit IPAL manapun (ipalId kosong).
+// Ditampilkan agar total di halaman Fluktuasi selalu inline dengan
+// total di menu Penggunaan Air (termasuk baris \"Belum Ditugaskan\").
+function buildUnassignedSrcData() {
+  if (typeof paRows==='undefined') return [];
+  return paRows
+    .filter(r => !r.ipalId)
+    .map(row => {
+      const q = paAirLimbah(row);
+      const profileKey = matchFluktProfile(row.nama);
+      return { nama: row.nama||'(tanpa nama)', q, profileKey, profile: FLUKT_PROFILES[profileKey] };
+    }).filter(d => d.q > 0);
+}
+
+function renderFluktuasiPage() {
+  const btnWrap = document.getElementById('fluktIpalBtns');
+  if (!btnWrap) return;
+  if (!ipals||ipals.length===0) {
+    btnWrap.innerHTML='<span style="font-size:.8rem;color:var(--muted);">Belum ada unit IPAL.</span>';
+    const fc=document.getElementById('fluktContent');
+    if(fc) fc.innerHTML='<div class="es"><div class="ei">📈</div><p>Belum ada unit IPAL yang dibuat.</p></div>';
+    return;
+  }
+  if (fluktActiveIpalId!=='all' && !ipals.find(x=>x.id===fluktActiveIpalId)) {
+    fluktActiveIpalId = 'all';
+  }
+  btnWrap.innerHTML =
+    `<button class="fl-ipal-btn ${fluktActiveIpalId==='all'?'active':''}" onclick="fluktSelectIpal('all')">Semua IPAL</button>` +
+    ipals.map(ip =>
+      `<button class="fl-ipal-btn ${ip.id===fluktActiveIpalId?'active':''}" onclick="fluktSelectIpal(${ip.id})">${escH(ip.name)}</button>`
+    ).join('');
+  renderFluktuasiContent();
+}
+
+function fluktSelectIpal(id) {
+  fluktActiveIpalId = id;
+  if (fluktChart) { fluktChart.destroy(); fluktChart=null; }
+  renderFluktuasiPage();
+}
+
+function downloadFluktChart() {
+  const canvas = document.getElementById('fluktCanvas');
+  if (!canvas) return;
+  const link = document.createElement('a');
+  const ipalName = fluktActiveIpalId==='all'
+    ? 'Semua_IPAL'
+    : (ipals.find(x=>x.id===fluktActiveIpalId)||{name:'IPAL'}).name.replace(/\s+/g,'_');
+  link.download = `Fluktuasi_${ipalName}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+// Helper: tombol unduh grafik
+function fluktDlBtn() {
+  return `<button onclick="downloadFluktChart()" style="display:flex;align-items:center;gap:6px;padding:6px 14px;border:1.5px solid var(--line);border-radius:8px;background:var(--card);font-size:.78rem;font-weight:600;color:var(--ink-soft);cursor:pointer;transition:border-color .15s,color .15s;" onmouseover="this.style.borderColor='var(--ink)';this.style.color='var(--ink)'" onmouseout="this.style.borderColor='var(--line)';this.style.color='var(--ink-soft)'">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Unduh Grafik (.png)
+  </button>`;
+}
+
+// Helper: konfigurasi Chart.js (legend klik toggle + tooltip)
+function fluktChartOpts(extraPlugins) {
+  return {
+    responsive: true,
+    interaction: { mode:'index', intersect:false },
+    plugins: {
+      legend: { display:false },
+      tooltip: {
+        callbacks: { label: ctx => ` ${ctx.dataset.label}: ${fmtID(ctx.parsed.y,3)} m\u00b3/jam` }
+      },
+      ...extraPlugins
+    },
+    scales: {
+      x: { grid:{color:'rgba(0,0,0,0.05)'}, ticks:{font:{size:9}}, title:{display:true,text:'Waktu (jam)',font:{size:10}} },
+      y: { beginAtZero:true, grid:{color:'rgba(0,0,0,0.05)'}, ticks:{font:{size:9},callback:v=>fmtID(v,3)}, title:{display:true,text:'Debit (m\u00b3/jam)',font:{size:10}} }
+    }
+  };
+}
+
+// Helper: tabel split 12|12
+function fluktTblHtml(hourlyQ, hourlyPct, totalQ, peakHour) {
+  const hours = Array.from({length:24},(_,i)=>i);
+  const L=hours.slice(0,12), R=hours.slice(12,24);
+  // Total % dihitung dari data sesungguhnya (bukan di-hardcode "100,0"), supaya
+  // jika ada selisih pembulatan atau bug pada profil, tabel menunjukkannya apa adanya
+  // alih-alih menyembunyikannya di balik angka tetap.
+  const sumQ = hourlyQ.reduce((a,b)=>a+b,0);
+  const sumPct = hourlyPct.reduce((a,b)=>a+b,0);
+  const pctFlagged = Math.abs(sumPct-100) > 0.15; // toleransi pembulatan wajar
+  return `<div class="fl-tbl-wrap"><table class="fl-tbl" style="min-width:500px;">
+    <thead>
+      <tr>
+        <th style="text-align:left;width:68px;">Waktu</th>
+        <th>Debit<br><span style="font-weight:400;font-size:.65rem;">m³/jam</span></th>
+        <th style="border-right:2px solid rgba(255,255,255,.35);">%</th>
+        <th style="text-align:left;width:68px;">Waktu</th>
+        <th>Debit<br><span style="font-weight:400;font-size:.65rem;">m³/jam</span></th>
+        <th>%</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${L.map((h,i)=>{
+        const rh=R[i]; const lP=h===peakHour; const rP=rh===peakHour; const isLast=i===11;
+        const rC=isLast
+          ?`<td style="font-weight:700;background:#f4f7fb;">TOTAL</td><td style="font-weight:700;background:#f4f7fb;">${fmtID(sumQ,3)}</td><td style="font-weight:700;background:${pctFlagged?'#fde68a':'#f4f7fb'};" title="${pctFlagged?'Selisih dari 100% terdeteksi — periksa profil fluktuasi yang dipakai.':''}">${fmtID(sumPct,1)}${pctFlagged?' ⚠️':''}</td>`
+          :`<td>${String(rh).padStart(2,'0')}.00</td><td class="${rP?'fl-peak':''}">${fmtID(hourlyQ[rh],3)}</td><td class="${rP?'fl-peak':''}">${fmtID(hourlyPct[rh],1)}</td>`;
+        return `<tr><td>${String(h).padStart(2,'0')}.00</td><td class="${lP?'fl-peak':''}" style="border-right:none;">${fmtID(hourlyQ[h],3)}</td><td class="${lP?'fl-peak':''}" style="border-right:2px solid var(--line);">${fmtID(hourlyPct[h],1)}</td>${rC}</tr>`;
+      }).join('')}
+    </tbody>
+  </table></div>`;
+}
+
+function renderFluktuasiContent() {
+  const wrap = document.getElementById('fluktContent');
+  if (!wrap) return;
+  const hours = Array.from({length:24},(_,i)=>i);
+  const xLabels = hours.map(h=>`${String(h).padStart(2,'0')}.00`);
+  const IPAL_COLORS = ['#e07b39','#059669','#7c3aed','#dc2626','#0891b2','#d97706','#9333ea','#0e7490','#64748b','#be185d'];
+
+  // ── MODE SEMUA ──────────────────────────────────────────────
+  if (fluktActiveIpalId === 'all') {
+    const unassignedSrc = buildUnassignedSrcData();
+    const allSrc = ipals.flatMap(ip => buildSrcData(ip)).concat(unassignedSrc);
+    if (!allSrc.length) {
+      wrap.innerHTML=`<div class="es"><div class="ei">📋</div><p>Belum ada data debit pada menu Penggunaan Air.</p></div>`;
+      return;
+    }
+    const { hourlyQ, hourlyPct, totalQ } = calcWeightedHourly(allSrc);
+    const peakHour = hourlyQ.indexOf(Math.max(...hourlyQ));
+
+    const perIpalData = ipals.map(ip => {
+      const sd = buildSrcData(ip);
+      if (!sd.length) return null;
+      const { hourlyQ: hq, totalQ: tq } = calcWeightedHourly(sd);
+      return { ipal:ip, hourlyQ:hq, totalQ:tq };
+    }).filter(Boolean);
+
+    // Sumber belum ditugaskan tetap disertakan dalam total gabungan supaya
+    // konsisten dengan menu Penggunaan Air, dan ditampilkan sebagai "kontributor"
+    // terpisah agar pengguna tahu ada bagian yang belum diberi unit IPAL tujuan.
+    if (unassignedSrc.length) {
+      const { hourlyQ: hq, totalQ: tq } = calcWeightedHourly(unassignedSrc);
+      perIpalData.push({ ipal:{ id:'__unassigned__', name:'Belum Ditugaskan' }, hourlyQ:hq, totalQ:tq });
+    }
+
+    const nIpalActive = perIpalData.filter(d=>d.ipal.id!=='__unassigned__').length;
+    const unassignedNote = unassignedSrc.length
+      ? ` <span style="color:#b45309;">+ ${unassignedSrc.length} sumber belum ditugaskan ke unit IPAL manapun (tetap dihitung dalam total).</span>`
+      : '';
+    wrap.innerHTML = `
+      <div class="fl-info-box">
+        Total seluruh air limbah: <strong>${fmtID(totalQ,3)} m³/hari</strong> dari
+        <strong>${nIpalActive} unit IPAL</strong> aktif.
+        Jam puncak: <strong>${String(peakHour).padStart(2,'0')}.00–${String((peakHour+1)%24).padStart(2,'0')}.00</strong>
+        ≈ <strong>${fmtID(hourlyQ[peakHour],3)} m³/jam</strong>
+        (${fmtID(hourlyPct[peakHour],1)}% debit harian total).${unassignedNote}
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:6px;">
+        <div class="fl-section-hd" style="margin:0;">Grafik Fluktuasi — Semua IPAL</div>
+        ${fluktDlBtn()}
+      </div>
+      <p style="font-size:.73rem;color:var(--muted);margin:-2px 0 6px;">
+        Garis tebal biru tua = total gabungan. Garis putus-putus berwarna = tiap unit IPAL.
+        <strong>Centang/hilangkan centang untuk tampilkan atau sembunyikan garis.</strong>
+      </p>
+      ${fluktLegendPanelHtml('all', [
+        { label:'Total Gabungan', color:'#1e3a5f', dashed:false },
+        ...perIpalData.map((d,i)=>({ label:d.ipal.name, color:IPAL_COLORS[i%IPAL_COLORS.length], dashed:true }))
+      ])}
+      <div class="fl-chart-wrap"><canvas id="fluktCanvas" height="270"></canvas></div>
+
+      <div class="fl-section-hd">Tabel Fluktuasi — Gabungan Semua IPAL</div>
+      <p style="font-size:.75rem;color:var(--muted);margin:-6px 0 10px;">Σ debit 24 jam = total debit harian seluruh IPAL. Kolom kuning = jam puncak.</p>
+      ${fluktTblHtml(hourlyQ, hourlyPct, totalQ, peakHour)}
+
+      <div class="fl-section-hd" style="margin-top:20px;">Kontribusi per Unit IPAL</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+        ${perIpalData.map((d,i)=>{
+          const pct=totalQ>0?d.totalQ/totalQ*100:0;
+          return `<div style="flex:1;min-width:150px;background:var(--card);border:1px solid var(--line);border-left:4px solid ${IPAL_COLORS[i%IPAL_COLORS.length]};border-radius:6px;padding:8px 12px;">
+            <div style="font-weight:700;font-size:.8rem;color:var(--ink);">${escH(d.ipal.name)}</div>
+            <div style="font-size:.72rem;color:var(--muted);margin-top:2px;">${fmtID(d.totalQ,3)} m³/hr · <strong style="color:var(--ink);">${fmtID(pct,1)}%</strong></div>
+            <div style="height:5px;background:#e5e7eb;border-radius:3px;margin-top:5px;"><div style="height:5px;background:${IPAL_COLORS[i%IPAL_COLORS.length]};border-radius:3px;width:${Math.round(pct)}%;"></div></div>
+          </div>`;
+        }).join('')}
+      </div>
+    `;
+
+    requestAnimationFrame(()=>{
+      const canvas=document.getElementById('fluktCanvas');
+      if(!canvas) return;
+      if(fluktChart){fluktChart.destroy();fluktChart=null;}
+      const hiddenAll = fluktHiddenLines.all || {};
+      const datasets = [
+        {
+          label:'Total Gabungan',
+          data: hourlyQ.map(v=>Math.round(v*10000)/10000),
+          borderColor:'#1e3a5f', backgroundColor:'transparent',
+          borderWidth:3, fill:false, tension:0.45,
+          pointRadius:2.5, pointBackgroundColor:'#1e3a5f', order:0,
+          hidden: !!hiddenAll['Total Gabungan']
+        },
+        ...perIpalData.map((d,i)=>({
+          label: d.ipal.name,
+          data: d.hourlyQ.map(v=>Math.round(v*10000)/10000),
+          borderColor: IPAL_COLORS[i%IPAL_COLORS.length],
+          backgroundColor: IPAL_COLORS[i%IPAL_COLORS.length]+'25',
+          borderWidth:1.8, fill:false, tension:0.45,
+          pointRadius:1.5, borderDash:[5,4], order:i+1,
+          hidden: !!hiddenAll[d.ipal.name]
+        }))
+      ];
+      fluktChart=new Chart(canvas,{type:'line',data:{labels:xLabels,datasets},options:fluktChartOpts({})});
+      datasets.forEach((ds,idx)=>{
+        if(ds.hidden){
+          const row=document.getElementById(`fluktChk_all_${idx}`);
+          if(row){ row.classList.add('fl-line-off'); const cb=row.querySelector('input'); if(cb) cb.checked=false; }
+        }
+      });
+    });
+    return;
+  }
+
+  // ── MODE PER IPAL ───────────────────────────────────────────
+  const ipal = ipals.find(x=>x.id===fluktActiveIpalId);
+  if (!ipal) return;
+  const srcData = buildSrcData(ipal);
+
+  if (!srcData.length) {
+    wrap.innerHTML=`<div class="es"><div class="ei">📋</div>
+      <p>Belum ada data debit untuk <strong>${escH(ipal.name)}</strong>.<br>
+      Isi nilai kebutuhan air baku di menu <strong>Penggunaan Air</strong> dan pilih unit IPAL tujuan.</p></div>`;
+    return;
+  }
+
+  const { hourlyQ, hourlyPct, totalQ } = calcWeightedHourly(srcData);
+  const peakHour = hourlyQ.indexOf(Math.max(...hourlyQ));
+  const usedProfiles = [...new Set(srcData.map(d=>d.profileKey))];
+  const multiSrc = srcData.length > 1;
+
+  const bobotHtml = multiSrc ? `
+    <div class="fl-info-box" style="margin-bottom:12px;">
+      <strong>📐 Penggabungan profil tertimbang:</strong>
+      Q_jam(h) = Σ [Q<sub>i</sub> × (%profil<sub>i</sub>(h) / 100)].
+      Sumber berdebit lebih besar → pengaruh lebih besar terhadap bentuk kurva gabungan.
+      <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;">
+        ${srcData.map(d=>{
+          const pct=totalQ>0?d.q/totalQ*100:0;
+          return `<div style="flex:1;min-width:150px;background:#f8f8f8;border:1px solid #e0e0e0;border-radius:6px;padding:8px 10px;">
+            <div style="font-weight:700;font-size:.78rem;color:${d.profile.color};">${escH(d.nama)}</div>
+            <div style="font-size:.72rem;color:var(--muted);margin-top:2px;">Q = ${fmtID(d.q,3)} m³/hr · <strong style="color:var(--ink);">bobot ${fmtID(pct,1)}%</strong></div>
+            <div style="height:5px;background:#e5e7eb;border-radius:3px;margin-top:5px;"><div style="height:5px;background:${d.profile.color};border-radius:3px;width:${Math.round(pct)}%;"></div></div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>` : '';
+
+  wrap.innerHTML = `
+    <div class="fl-info-box">
+      Debit air limbah ke <strong>${escH(ipal.name)}</strong>:
+      <strong>${fmtID(totalQ,3)} m³/hari</strong> dari <strong>${srcData.length} sumber</strong>.
+      Jam puncak: <strong>${String(peakHour).padStart(2,'0')}.00–${String((peakHour+1)%24).padStart(2,'0')}.00</strong>
+      ≈ <strong>${fmtID(hourlyQ[peakHour],3)} m³/jam</strong> (${fmtID(hourlyPct[peakHour],1)}%).
+    </div>
+    ${bobotHtml}
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:6px;">
+      <div class="fl-section-hd" style="margin:0;">Grafik Fluktuasi — ${escH(ipal.name)}</div>
+      ${fluktDlBtn()}
+    </div>
+    <p style="font-size:.73rem;color:var(--muted);margin:-2px 0 6px;">
+      Area berwarna = kontribusi tiap sumber. Garis biru tua = total gabungan.
+      <strong>Centang/hilangkan centang untuk tampilkan atau sembunyikan garis.</strong>
+    </p>
+    ${fluktLegendPanelHtml('byIpal', [
+      ...srcData.map(d=>({ label:`${d.nama} (${d.profile.label})`, color:d.profile.color, dashed:false })),
+      { label:`Total — ${ipal.name}`, color:'#1e3a5f', dashed:false }
+    ])}
+    <div class="fl-chart-wrap"><canvas id="fluktCanvas" height="240"></canvas></div>
+
+    <div class="fl-section-hd">Tabel Fluktuasi — ${escH(ipal.name)}</div>
+    <p style="font-size:.75rem;color:var(--muted);margin:-6px 0 10px;">Σ debit 24 jam = total debit harian. Kolom kuning = jam puncak.</p>
+    ${fluktTblHtml(hourlyQ, hourlyPct, totalQ, peakHour)}
+
+    <div class="fl-section-hd" style="margin-top:20px;">Profil yang Digunakan &amp; Pertimbangannya</div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+      ${usedProfiles.map(k=>{
+        const p=FLUKT_PROFILES[k];
+        const st=srcData.filter(d=>d.profileKey===k);
+        return `<div style="background:var(--card);border:1px solid var(--line);border-left:4px solid ${p.color};border-radius:6px;padding:10px 14px;">
+          <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:5px;">
+            <span style="width:10px;height:10px;border-radius:50%;background:${p.color};flex-shrink:0;margin-top:3px;"></span>
+            <div>
+              <strong style="font-size:.83rem;color:${p.color};">${p.label}</strong>
+              <span style="font-size:.71rem;color:var(--muted);margin-left:6px;">→ ${st.map(d=>escH(d.nama)).join(', ')}</span>
+            </div>
+          </div>
+          <p style="font-size:.75rem;color:var(--ink-soft);margin:0;line-height:1.6;padding-left:18px;">${p.desc}</p>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="fl-info-box" style="font-size:.73rem;color:var(--muted);background:#fafafa;border-color:var(--line);">
+      <strong>Catatan:</strong> Profil dideteksi dari nama kegiatan/fasilitas dan diperbarui secara realtime saat data Penggunaan Air berubah.
+      Untuk multi-sumber, kurva gabungan merupakan penjumlahan tertimbang — sumber berdebit besar mendominasi bentuk kurva.
+    </div>
+  `;
+
+  requestAnimationFrame(()=>{
+    const canvas=document.getElementById('fluktCanvas');
+    if(!canvas) return;
+    if(fluktChart){fluktChart.destroy();fluktChart=null;}
+    const hiddenByIpal = fluktHiddenLines.byIpal || {};
+    const datasets=[
+      ...srcData.map(d=>({
+        label:`${d.nama} (${d.profile.label})`,
+        data: hours.map(h=>Math.round(d.q*(d.profile.pct[h]/100)*10000)/10000),
+        backgroundColor: d.profile.color+'38',
+        borderColor: d.profile.color,
+        borderWidth:1.5, fill:true, tension:0.45,
+        pointRadius:2, pointHoverRadius:4, order:2,
+        hidden: !!hiddenByIpal[`${d.nama} (${d.profile.label})`]
+      })),
+      {
+        label:`Total — ${ipal.name}`,
+        data: hourlyQ.map(v=>Math.round(v*10000)/10000),
+        borderColor:'#1e3a5f', backgroundColor:'transparent',
+        borderWidth:2.5, fill:false, tension:0.45,
+        pointRadius:2.5, pointBackgroundColor:'#1e3a5f', order:1,
+        hidden: !!hiddenByIpal[`Total — ${ipal.name}`]
+      }
+    ];
+    fluktChart=new Chart(canvas,{type:'line',data:{labels:xLabels,datasets},options:fluktChartOpts({})});
+    datasets.forEach((ds,idx)=>{
+      if(ds.hidden){
+        const row=document.getElementById(`fluktChk_byIpal_${idx}`);
+        if(row){ row.classList.add('fl-line-off'); const cb=row.querySelector('input'); if(cb) cb.checked=false; }
+      }
+    });
+  });
+}
+
 
 </script>
   <div id="remFocusLabel"></div>
