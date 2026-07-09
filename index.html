@@ -1228,46 +1228,47 @@ const BAKU_MUTU = {
   },
   // ── B. PEMANFAATAN ─────────────────────────────────────────────────────────
   // 1. Penyiraman / Pencucian — Lampiran I B.1
+  // Parameter: pH, BOD, COD, TSS, FC, Klorin (tidak ada Minyak & Lemak)
   manfaat_siram: {
     label: 'Pemanfaatan — Penyiraman dan/atau Pencucian',
     params: [
-      { p:'pH',       unit:'-',          bm_min:6, bm_max:9 },
-      { p:'BOD',      unit:'mg/L',       bm:30  },
-      { p:'COD',      unit:'mg/L',       bm:100 },
-      { p:'TSS',      unit:'mg/L',       bm:30  },
-      { p:'MinyakLemak', unit:'mg/L',    bm:5   },
-      { p:'FC',       unit:'MPN/100mL',  bm:200 },
-      { p:'Klorin',   unit:'mg/L',       bm:1, note:'jika klorinasi' },
+      { p:'pH',     unit:'-',          bm_min:6, bm_max:9 },
+      { p:'BOD',    unit:'mg/L',       bm:30  },
+      { p:'COD',    unit:'mg/L',       bm:100 },
+      { p:'TSS',    unit:'mg/L',       bm:30  },
+      { p:'FC',     unit:'MPN/100mL',  bm:200 },
+      { p:'Klorin', unit:'mg/L',       bm:1, note:'jika klorinasi' },
     ]
   },
   // 2. Penyiraman / Pencucian — Yankes — Lampiran I B.1 (fasyankes)
+  // Parameter: pH, BOD, COD, TSS, FC, Klorin, Salmonella, Shigella, Vibrio, Streptococcus
+  // (tidak ada Minyak & Lemak)
   manfaat_siram_yankes: {
     label: 'Pemanfaatan — Penyiraman/Pencucian (Fasyankes)',
     params: [
-      { p:'pH',         unit:'-',          bm_min:6, bm_max:9 },
-      { p:'BOD',        unit:'mg/L',       bm:12  },
-      { p:'COD',        unit:'mg/L',       bm:80  },
-      { p:'TSS',        unit:'mg/L',       bm:30  },
-      { p:'MinyakLemak',unit:'mg/L',       bm:5   },
-      { p:'FC',         unit:'MPN/100mL',  bm:200 },
-      { p:'Klorin',     unit:'mg/L',       bm:1, note:'jika klorinasi' },
-      { p:'Salmonella', unit:'-',          bm_neg:true },
-      { p:'Shigella',   unit:'-',          bm_neg:true },
-      { p:'Vibrio',     unit:'-',          bm_neg:true },
+      { p:'pH',          unit:'-',          bm_min:6, bm_max:9 },
+      { p:'BOD',         unit:'mg/L',       bm:12  },
+      { p:'COD',         unit:'mg/L',       bm:80  },
+      { p:'TSS',         unit:'mg/L',       bm:30  },
+      { p:'FC',          unit:'MPN/100mL',  bm:200 },
+      { p:'Klorin',      unit:'mg/L',       bm:1, note:'jika klorinasi' },
+      { p:'Salmonella',  unit:'-',          bm_neg:true },
+      { p:'Shigella',    unit:'-',          bm_neg:true },
+      { p:'Vibrio',      unit:'-',          bm_neg:true },
       { p:'Streptococcus', unit:'MPN/100mL', bm:100 },
     ]
   },
   // 3. Resapan di atas formasi, dalam formasi, menahan intrusi air laut — Lampiran I B.2
+  // Parameter: pH, BOD, COD, TSS, FC, Klorin (tidak ada Minyak & Lemak)
   manfaat_resapan: {
     label: 'Pemanfaatan — Resapan / Formasi / Anti-Intrusi Air Laut',
     params: [
-      { p:'pH',       unit:'-',          bm_min:6, bm_max:9 },
-      { p:'BOD',      unit:'mg/L',       bm:30  },
-      { p:'COD',      unit:'mg/L',       bm:100 },
-      { p:'TSS',      unit:'mg/L',       bm:30  },
-      { p:'MinyakLemak', unit:'mg/L',    bm:5   },
-      { p:'FC',       unit:'MPN/100mL',  bm:200 },
-      { p:'Klorin',   unit:'mg/L',       bm:1, note:'jika klorinasi' },
+      { p:'pH',     unit:'-',          bm_min:6, bm_max:9 },
+      { p:'BOD',    unit:'mg/L',       bm:30  },
+      { p:'COD',    unit:'mg/L',       bm:100 },
+      { p:'TSS',    unit:'mg/L',       bm:30  },
+      { p:'FC',     unit:'MPN/100mL',  bm:200 },
+      { p:'Klorin', unit:'mg/L',       bm:1, note:'jika klorinasi' },
     ]
   },
 };
@@ -1912,6 +1913,216 @@ REMOVAL_EFF.anaerobic_lagoon   = REMOVAL_EFF.pond_anaerobic;
 REMOVAL_EFF.anaerobic_digester = REMOVAL_EFF.anaerobic_digester || REMOVAL_EFF.anaerobic;
 // [removalOverrides declared later]
 
+// ── LIBRARY OF ADDITIONAL PARAMETERS (di luar tabel baku mutu default) ──────
+// Untuk parameter yang ada dalam ruang lingkup Permen LH/BPLH No. 11 Tahun 2025
+// (atau parameter kualitas air limbah umum lainnya) namun belum tercantum di
+// tabel PARAM_META utama. Dipilih oleh user via dropdown pada "Tambah Parameter
+// Manual", dengan nilai %Removal rekomendasi (referensi literatur) per unit
+// proses — mengikuti gaya & referensi yang sama dengan REMOVAL_EFF di atas.
+// Nilai pct:0 / tidak ada entri untuk suatu unit berarti unit tsb secara umum
+// TIDAK signifikan menyisihkan parameter tersebut (bukan berarti data kosong).
+const EXTRA_PARAM_LIBRARY = {
+  Nitrat: {
+    label: 'Nitrat (Sebagai N)', unit: 'mg/L', defaultBm: 20,
+    removal: {
+      equalization:              [ {pct:0,  ref:'[1] Metcalf & Eddy (2003) — pass-through, tidak ada nitrifikasi/denitrifikasi'} ],
+      presed_konv:                [ {pct:0,  ref:'[1] Metcalf & Eddy (2003) — sedimentasi fisik, NO3 larut tidak tersisihkan'} ],
+      presed_lamella:              [ {pct:0,  ref:'[1] Metcalf & Eddy (2003) — sedimentasi fisik, NO3 larut tidak tersisihkan'} ],
+      septic_tank:                [ {pct:0,  ref:'[2] Tchobanoglous et al. (2014) — kondisi anaerobik, tidak ada nitrifikasi'} ],
+      baffled_reactor:             [ {pct:0,  ref:'[8] Sasse (1998) — reaktor anaerobik, tidak ada nitrifikasi'} ],
+      anaerobic_filter:            [ {pct:0,  ref:'[4] Chernicharo (2007) — kondisi anaerobik, tidak ada nitrifikasi'} ],
+      anaerobic:                  [ {pct:0,  ref:'[4] Chernicharo (2007) — UASB anaerobik, tidak ada nitrifikasi'} ],
+      anaerobic_lagoon:            [ {pct:0,  ref:'[5] von Sperling (2007) — kondisi anaerobik'} ],
+      anaerobic_digester:          [ {pct:0,  ref:'[12] Deublein & Steinhauser (2008) — kondisi anaerobik'} ],
+      aerobic:                    [ {pct:35, ref:'[2] Tchobanoglous et al. (2014) — nitrifikasi parsial pada proses aerobik, tipikal 25–45%'},
+                                     {pct:15, ref:'[1] Metcalf & Eddy (2003) — efisiensi rendah, DO/HRT terbatas'} ],
+      activated_sludge:            [ {pct:45, ref:'[2] Tchobanoglous et al. (2014) — nitrifikasi konvensional, tipikal 30–60%'},
+                                     {pct:20, ref:'[1] Metcalf & Eddy (2003) — efisiensi rendah tanpa zona anoksik'},
+                                     {pct:70, ref:'[16] Rittmann & McCarty (2001) — dengan zona anoksik (denitrifikasi), efisiensi tinggi'} ],
+      sbr:                        [ {pct:55, ref:'[2] Tchobanoglous et al. (2014) — SBR dengan fase anoksik, tipikal 45–70%'},
+                                     {pct:25, ref:'[1] Metcalf & Eddy (2003) — tanpa fase anoksik khusus'} ],
+      mbr:                        [ {pct:60, ref:'[10] Judd & Judd (2006) — MBR dengan konfigurasi anoksik/aerobik, tipikal 50–75%'},
+                                     {pct:30, ref:'[2] Tchobanoglous et al. (2014) — efisiensi rendah'} ],
+      mbbr:                       [ {pct:40, ref:'[11] Ødegaard (2006) — MBBR nitrifikasi-denitrifikasi, tipikal 30–55%'} ],
+      biofilter:                  [ {pct:30, ref:'[7] Said & Yudo (2006) — biofilter aerobik-anaerobik, nitrifikasi parsial'} ],
+      secondary_clarifier:         [ {pct:0,  ref:'[1] Metcalf & Eddy (2003) — sedimentasi fisik, tidak mengolah NO3 terlarut'} ],
+      secondary_clarifier_lamella: [ {pct:0,  ref:'[1] Metcalf & Eddy (2003) — sedimentasi fisik, tidak mengolah NO3 terlarut'} ],
+      filtrasi:                   [ {pct:5,  ref:'[18] Crittenden et al. (2012) — filtrasi fisik, penyisihan NO3 minimal'} ],
+      disinfeksi:                 [ {pct:0,  ref:'Tidak ada penyisihan NO3 pada unit disinfeksi'} ],
+      pond_anaerobic:              [ {pct:0,  ref:'[6] Mara (2004) — kondisi anaerobik'} ],
+      pond_fakultatif:             [ {pct:20, ref:'[6] Mara (2004) — nitrifikasi-denitrifikasi parsial di kolom air'} ],
+      pond_maturasi:               [ {pct:25, ref:'[6] Mara (2004) — uptake nitrogen oleh alga, tipikal 15–35%'} ],
+      wetland:                    [ {pct:40, ref:'[9] Kadlec & Wallace (2009) — constructed wetland, nitrifikasi-denitrifikasi, tipikal 30–55%'} ],
+      sand_filter:                 [ {pct:10, ref:'[18] Crittenden et al. (2012) — filtrasi pasir, penyisihan terbatas'} ],
+      grease_trap:                 [ {pct:0,  ref:'[1] Metcalf & Eddy (2003) — tidak ada penyisihan NO3'} ],
+    }
+  },
+  Fosfat: {
+    label: 'Fosfat (Sebagai PO₄)', unit: 'mg/L', defaultBm: 2,
+    removal: {
+      equalization:              [ {pct:0,  ref:'[1] Metcalf & Eddy (2003) — pass-through'} ],
+      presed_konv:                [ {pct:10, ref:'[1] Metcalf & Eddy (2003) — sebagian terikat pada padatan tersuspensi'} ],
+      presed_lamella:              [ {pct:12, ref:'[1] Metcalf & Eddy (2003) — sedimentasi lebih efisien menangkap P terikat padatan'} ],
+      septic_tank:                [ {pct:15, ref:'[2] Tchobanoglous et al. (2014) — pengendapan P terikat padatan, tipikal 10–20%'} ],
+      baffled_reactor:             [ {pct:20, ref:'[8] Sasse (1998) — tipikal 15–25%'} ],
+      anaerobic_filter:            [ {pct:20, ref:'[4] Chernicharo (2007) — tipikal 15–25%'} ],
+      anaerobic:                  [ {pct:15, ref:'[4] Chernicharo (2007) — penyisihan P terbatas pada proses anaerobik'} ],
+      anaerobic_lagoon:            [ {pct:15, ref:'[5] von Sperling (2007) — sedimentasi parsial'} ],
+      anaerobic_digester:          [ {pct:10, ref:'[12] Deublein & Steinhauser (2008)'} ],
+      aerobic:                    [ {pct:25, ref:'[2] Tchobanoglous et al. (2014) — uptake biomassa, tanpa proses EBPR khusus'} ],
+      activated_sludge:            [ {pct:30, ref:'[2] Tchobanoglous et al. (2014) — konvensional tanpa EBPR, tipikal 20–40%'},
+                                     {pct:85, ref:'[16] Rittmann & McCarty (2001) — dengan Enhanced Biological Phosphorus Removal (EBPR)'} ],
+      sbr:                        [ {pct:35, ref:'[2] Tchobanoglous et al. (2014) — tipikal 25–45%'} ],
+      mbr:                        [ {pct:35, ref:'[10] Judd & Judd (2006) — tanpa EBPR/koagulan tambahan'} ],
+      mbbr:                       [ {pct:20, ref:'[11] Ødegaard (2006) — MBBR standar, penyisihan P terbatas'} ],
+      biofilter:                  [ {pct:20, ref:'[7] Said & Yudo (2006)'} ],
+      secondary_clarifier:         [ {pct:10, ref:'[1] Metcalf & Eddy (2003) — P terikat padatan tersuspensi'} ],
+      secondary_clarifier_lamella: [ {pct:12, ref:'[1] Metcalf & Eddy (2003)'} ],
+      filtrasi:                   [ {pct:15, ref:'[18] Crittenden et al. (2012) — filtrasi padatan halus mengandung P'} ],
+      disinfeksi:                 [ {pct:0,  ref:'Tidak ada penyisihan fosfat pada unit disinfeksi'} ],
+      pond_anaerobic:              [ {pct:10, ref:'[6] Mara (2004)'} ],
+      pond_fakultatif:             [ {pct:20, ref:'[6] Mara (2004) — uptake alga'} ],
+      pond_maturasi:               [ {pct:25, ref:'[6] Mara (2004) — uptake alga, tipikal 20–35%'} ],
+      wetland:                    [ {pct:35, ref:'[9] Kadlec & Wallace (2009) — adsorpsi media & uptake tanaman, tipikal 25–45%'} ],
+      sand_filter:                 [ {pct:15, ref:'[18] Crittenden et al. (2012)'} ],
+      grease_trap:                 [ {pct:0,  ref:'[1] Metcalf & Eddy (2003) — tidak ada penyisihan fosfat'} ],
+    }
+  },
+  Sulfida: {
+    label: 'Sulfida (H₂S)', unit: 'mg/L', defaultBm: 0.3,
+    removal: {
+      equalization:              [ {pct:0,  ref:'[1] Metcalf & Eddy (2003) — pass-through, berpotensi terbentuk di kondisi anaerob'} ],
+      presed_konv:                [ {pct:5,  ref:'[1] Metcalf & Eddy (2003) — minimal, sebagian volatilisasi'} ],
+      presed_lamella:              [ {pct:5,  ref:'[1] Metcalf & Eddy (2003)'} ],
+      septic_tank:                [ {pct:-20,ref:'[2] Tchobanoglous et al. (2014) — kondisi anaerob dapat MENINGKATKAN sulfida (reduksi sulfat)'} ],
+      baffled_reactor:             [ {pct:-15,ref:'[8] Sasse (1998) — potensi peningkatan H2S pada kompartemen anaerobik'} ],
+      anaerobic_filter:            [ {pct:-10,ref:'[4] Chernicharo (2007) — reduksi sulfat pada media anaerobik'} ],
+      anaerobic:                  [ {pct:-15,ref:'[4] Chernicharo (2007) — UASB, potensi produksi H2S dari reduksi sulfat'} ],
+      anaerobic_lagoon:            [ {pct:-10,ref:'[5] von Sperling (2007)'} ],
+      anaerobic_digester:          [ {pct:-20,ref:'[12] Deublein & Steinhauser (2008) — produksi H2S signifikan pada digester anaerobik'} ],
+      aerobic:                    [ {pct:80, ref:'[2] Tchobanoglous et al. (2014) — oksidasi biologis H2S pada kondisi aerobik, tipikal 70–90%'} ],
+      activated_sludge:            [ {pct:85, ref:'[2] Tchobanoglous et al. (2014) — oksidasi pada tangki aerasi'} ],
+      sbr:                        [ {pct:80, ref:'[2] Tchobanoglous et al. (2014)'} ],
+      mbr:                        [ {pct:85, ref:'[10] Judd & Judd (2006)'} ],
+      mbbr:                       [ {pct:70, ref:'[11] Ødegaard (2006)'} ],
+      biofilter:                  [ {pct:60, ref:'[7] Said & Yudo (2006) — biofilter aerobik'} ],
+      secondary_clarifier:         [ {pct:0,  ref:'[1] Metcalf & Eddy (2003) — sedimentasi, tidak mengoksidasi H2S'} ],
+      secondary_clarifier_lamella: [ {pct:0,  ref:'[1] Metcalf & Eddy (2003)'} ],
+      filtrasi:                   [ {pct:10, ref:'[18] Crittenden et al. (2012) — volatilisasi parsial'} ],
+      disinfeksi:                 [ {pct:30, ref:'[1] Metcalf & Eddy (2003) — oksidasi oleh klorin, tergantung dosis'} ],
+      pond_anaerobic:              [ {pct:-15,ref:'[6] Mara (2004) — potensi produksi H2S'} ],
+      pond_fakultatif:             [ {pct:40, ref:'[6] Mara (2004) — oksidasi parsial di lapisan aerobik'} ],
+      pond_maturasi:               [ {pct:70, ref:'[6] Mara (2004) — kondisi aerobik dominan'} ],
+      wetland:                    [ {pct:50, ref:'[9] Kadlec & Wallace (2009) — oksidasi di zona rhizosphere'} ],
+      sand_filter:                 [ {pct:15, ref:'[18] Crittenden et al. (2012)'} ],
+      grease_trap:                 [ {pct:0,  ref:'[1] Metcalf & Eddy (2003)'} ],
+    }
+  },
+  Fenol: {
+    label: 'Fenol', unit: 'mg/L', defaultBm: 1,
+    removal: {
+      equalization:              [ {pct:0,  ref:'[1] Metcalf & Eddy (2003) — pass-through'} ],
+      presed_konv:                [ {pct:5,  ref:'[1] Metcalf & Eddy (2003) — minimal, sebagian terikat padatan'} ],
+      presed_lamella:              [ {pct:5,  ref:'[1] Metcalf & Eddy (2003)'} ],
+      septic_tank:                [ {pct:30, ref:'[2] Tchobanoglous et al. (2014) — degradasi anaerobik parsial'} ],
+      baffled_reactor:             [ {pct:45, ref:'[8] Sasse (1998) — degradasi anaerobik bertahap, tipikal 35–55%'} ],
+      anaerobic_filter:            [ {pct:50, ref:'[4] Chernicharo (2007) — biofilm anaerobik mendegradasi fenol'} ],
+      anaerobic:                  [ {pct:45, ref:'[4] Chernicharo (2007) — UASB'} ],
+      anaerobic_lagoon:            [ {pct:35, ref:'[5] von Sperling (2007)'} ],
+      anaerobic_digester:          [ {pct:30, ref:'[12] Deublein & Steinhauser (2008)'} ],
+      aerobic:                    [ {pct:85, ref:'[2] Tchobanoglous et al. (2014) — biodegradasi aerobik efisien, tipikal 75–95%'} ],
+      activated_sludge:            [ {pct:90, ref:'[2] Tchobanoglous et al. (2014) — tipikal 80–95%'} ],
+      sbr:                        [ {pct:88, ref:'[2] Tchobanoglous et al. (2014)'} ],
+      mbr:                        [ {pct:92, ref:'[10] Judd & Judd (2006) — retensi biomassa tinggi, degradasi optimal'} ],
+      mbbr:                       [ {pct:80, ref:'[11] Ødegaard (2006)'} ],
+      biofilter:                  [ {pct:70, ref:'[7] Said & Yudo (2006)'} ],
+      secondary_clarifier:         [ {pct:5,  ref:'[1] Metcalf & Eddy (2003)'} ],
+      secondary_clarifier_lamella: [ {pct:5,  ref:'[1] Metcalf & Eddy (2003)'} ],
+      filtrasi:                   [ {pct:10, ref:'[18] Crittenden et al. (2012) — adsorpsi parsial pada media'} ],
+      disinfeksi:                 [ {pct:20, ref:'[1] Metcalf & Eddy (2003) — oksidasi oleh klorin'} ],
+      pond_anaerobic:              [ {pct:30, ref:'[6] Mara (2004)'} ],
+      pond_fakultatif:             [ {pct:50, ref:'[6] Mara (2004)'} ],
+      pond_maturasi:               [ {pct:60, ref:'[6] Mara (2004) — fotodegradasi & biodegradasi aerobik'} ],
+      wetland:                    [ {pct:65, ref:'[9] Kadlec & Wallace (2009) — degradasi mikrobiologis di rhizosphere'} ],
+      sand_filter:                 [ {pct:15, ref:'[18] Crittenden et al. (2012)'} ],
+      grease_trap:                 [ {pct:5,  ref:'[1] Metcalf & Eddy (2003)'} ],
+    }
+  },
+  TotalColiform: {
+    label: 'Total Coliform', unit: 'MPN/100mL', defaultBm: 3000,
+    removal: {
+      equalization:              [ {pct:0,  ref:'[1] Metcalf & Eddy (2003) — pass-through'} ],
+      presed_konv:                [ {pct:10, ref:'[3] Qasim (1994) — pengurangan parsial bersama TSS'} ],
+      presed_lamella:              [ {pct:10, ref:'[3] Qasim (1994)'} ],
+      septic_tank:                [ {pct:65, ref:'[2] Tchobanoglous et al. (2014) — tipikal 1–2 log removal'} ],
+      baffled_reactor:             [ {pct:60, ref:'[8] Sasse (1998) — tipikal 1–2 log removal'} ],
+      anaerobic_filter:            [ {pct:70, ref:'[1] Metcalf & Eddy (2003)'} ],
+      anaerobic:                  [ {pct:55, ref:'[4] Chernicharo (2007)'} ],
+      anaerobic_lagoon:            [ {pct:60, ref:'[6] Mara (2004)'} ],
+      anaerobic_digester:          [ {pct:50, ref:'[12] Deublein & Steinhauser (2008)'} ],
+      aerobic:                    [ {pct:80, ref:'[2] Tchobanoglous et al. (2014) — tipikal 1–2 log removal'} ],
+      activated_sludge:            [ {pct:90, ref:'[2] Tchobanoglous et al. (2014) — tipikal 1–2 log removal'} ],
+      sbr:                        [ {pct:88, ref:'[2] Tchobanoglous et al. (2014)'} ],
+      mbr:                        [ {pct:99.9,ref:'[10] Judd & Judd (2006) — membran menahan bakteri secara fisik, log removal tinggi'} ],
+      mbbr:                       [ {pct:80, ref:'[11] Ødegaard (2006)'} ],
+      biofilter:                  [ {pct:70, ref:'[7] Said & Yudo (2006)'} ],
+      secondary_clarifier:         [ {pct:20, ref:'[1] Metcalf & Eddy (2003)'} ],
+      secondary_clarifier_lamella: [ {pct:20, ref:'[1] Metcalf & Eddy (2003)'} ],
+      filtrasi:                   [ {pct:60, ref:'[18] Crittenden et al. (2012) — filtrasi pasir cepat, tipikal 50–70%'} ],
+      disinfeksi:                 [ {pct:99.9,ref:'[14] WHO (2004) — klorinasi/UV dengan CT memadai, log removal tinggi'} ],
+      pond_anaerobic:              [ {pct:60, ref:'[6] Mara (2004)'} ],
+      pond_fakultatif:             [ {pct:85, ref:'[6] Mara (2004)'} ],
+      pond_maturasi:               [ {pct:99, ref:'[6] Mara (2004) — kolam maturasi didesain khusus untuk die-off patogen'} ],
+      wetland:                    [ {pct:90, ref:'[9] Kadlec & Wallace (2009)'} ],
+      sand_filter:                 [ {pct:60, ref:'[18] Crittenden et al. (2012)'} ],
+      grease_trap:                 [ {pct:0,  ref:'[3] Qasim (1994) — tidak ada penyisihan patogen'} ],
+    }
+  },
+  TDS: {
+    label: 'TDS (Total Dissolved Solid)', unit: 'mg/L', defaultBm: null,
+    removal: {
+      equalization:              [ {pct:0,  ref:'[1] Metcalf & Eddy (2003) — pass-through'} ],
+      presed_konv:                [ {pct:0,  ref:'[1] Metcalf & Eddy (2003) — sedimentasi tidak menyisihkan padatan terlarut'} ],
+      presed_lamella:              [ {pct:0,  ref:'[1] Metcalf & Eddy (2003)'} ],
+      septic_tank:                [ {pct:5,  ref:'[2] Tchobanoglous et al. (2014) — minimal'} ],
+      baffled_reactor:             [ {pct:5,  ref:'[8] Sasse (1998)'} ],
+      anaerobic_filter:            [ {pct:5,  ref:'[4] Chernicharo (2007)'} ],
+      anaerobic:                  [ {pct:5,  ref:'[4] Chernicharo (2007)'} ],
+      anaerobic_lagoon:            [ {pct:5,  ref:'[5] von Sperling (2007)'} ],
+      anaerobic_digester:          [ {pct:5,  ref:'[12] Deublein & Steinhauser (2008)'} ],
+      aerobic:                    [ {pct:10, ref:'[2] Tchobanoglous et al. (2014) — konversi sebagian padatan terlarut menjadi biomassa'} ],
+      activated_sludge:            [ {pct:10, ref:'[2] Tchobanoglous et al. (2014)'} ],
+      sbr:                        [ {pct:10, ref:'[2] Tchobanoglous et al. (2014)'} ],
+      mbr:                        [ {pct:15, ref:'[10] Judd & Judd (2006) — sebagian tertahan membran'} ],
+      mbbr:                       [ {pct:8,  ref:'[11] Ødegaard (2006)'} ],
+      biofilter:                  [ {pct:8,  ref:'[7] Said & Yudo (2006)'} ],
+      secondary_clarifier:         [ {pct:0,  ref:'[1] Metcalf & Eddy (2003)'} ],
+      secondary_clarifier_lamella: [ {pct:0,  ref:'[1] Metcalf & Eddy (2003)'} ],
+      filtrasi:                   [ {pct:5,  ref:'[18] Crittenden et al. (2012) — filtrasi konvensional tidak efektif untuk TDS'} ],
+      disinfeksi:                 [ {pct:0,  ref:'Tidak ada penyisihan TDS'} ],
+      pond_anaerobic:              [ {pct:0,  ref:'[6] Mara (2004)'} ],
+      pond_fakultatif:             [ {pct:5,  ref:'[6] Mara (2004)'} ],
+      pond_maturasi:               [ {pct:5,  ref:'[6] Mara (2004)'} ],
+      wetland:                    [ {pct:10, ref:'[9] Kadlec & Wallace (2009) — uptake tanaman terbatas'} ],
+      sand_filter:                 [ {pct:5,  ref:'[18] Crittenden et al. (2012)'} ],
+      grease_trap:                 [ {pct:0,  ref:'[1] Metcalf & Eddy (2003)'} ],
+    }
+  },
+};
+// Aliases mirroring REMOVAL_EFF, so extra-param presets resolve for all unit type strings too
+function _mirrorExtraAliases(entry) {
+  entry.removal.pond_facultative   = entry.removal.pond_fakultatif;
+  entry.removal.pond_maturation    = entry.removal.pond_maturasi;
+  entry.removal.cw_fws             = entry.removal.wetland;
+  entry.removal.cw_ssf_h           = entry.removal.wetland;
+  entry.removal.cw_ssf_v           = entry.removal.wetland;
+  entry.removal.filtrasi_lambat    = entry.removal.filtrasi;
+  entry.removal.filtrasi_cepat     = entry.removal.filtrasi;
+  entry.removal.filtrasi_tekanan   = entry.removal.filtrasi;
+}
+Object.values(EXTRA_PARAM_LIBRARY).forEach(_mirrorExtraAliases);
+
+
 // ── SLUDGE & GAS CLASSIFICATION ─────────────────────
 // Maps each unit-process type (u.type, matching UL{} keys) to how its sludge/gas
 // timbulan should be estimated, based on Tabel 19 & 20 (Sasse 1998; Deublein & Steinhauser 2008).
@@ -2050,6 +2261,11 @@ function gatherRemovalGasData() {
   const baseKeys    = ['pH','BOD','COD','TSS'];
   const allKeys     = [...new Set([...baseKeys, ...bmParamKeys])];
   const PARAMS      = allKeys.filter(k => PARAM_META[k]).map(k => ({ key:k, ...PARAM_META[k] }));
+  const CUSTOM_PARAMS = removalCustomParams.map(c => ({
+    key: c.key, label: c.label || '(Nama parameter)', unit: c.unit || '-',
+    infKey: c.key, canInput: true, isCustom: true, customBm: c.bm, customBmNote: c.bmNote,
+  }));
+  const customKeys = removalCustomParams.map(c => c.key);
 
   // Trace of BOD/COD/TSS/NH3/Deterjen/MinyakLemak/FC/Klorin through each unit
   let cur = {
@@ -2062,11 +2278,15 @@ function gatherRemovalGasData() {
     FC:          FCin,
     Klorin:      Klin,
   };
+  customKeys.forEach(k => {
+    const v = parseFloat((removalInfluent[k]||'').replace(',','.'));
+    cur[k] = isNaN(v) ? null : v;
+  });
   const trace = [];
   units.forEach(u => {
     const entry = {};
     const def = REMOVAL_EFF[u.type] || {};
-    ['BOD','COD','TSS','NH3','Deterjen','MinyakLemak','FC','Klorin'].forEach(p => {
+    ['BOD','COD','TSS','NH3','Deterjen','MinyakLemak','FC','Klorin', ...customKeys].forEach(p => {
       const inVal = cur[p];
       const pct = getParamPct(u.id, p);
       const kAdd = (p==='Klorin') ? getKlorinDose(u.id, def) : 0;
@@ -2080,6 +2300,12 @@ function gatherRemovalGasData() {
 
   // ── BM cell resolver (for report table + criteria display) ──
   function bmFor(paramKey, outletVal) {
+    const customP = removalCustomParams.find(c => c.key === paramKey);
+    if(customP) {
+      if(customP.bm === null || customP.bm === undefined) return null;
+      const ok = !isNaN(outletVal) && outletVal <= customP.bm;
+      return { text:`≤ ${customP.bm}`, status: isNaN(outletVal) ? 'na' : (ok?'pass':'fail'), note:customP.bmNote };
+    }
     if(!bm) return null;
     const bmParams = bm.params || [];
     const bmP = bmParams.find(p=>p.p===paramKey);
@@ -2134,7 +2360,7 @@ function gatherRemovalGasData() {
 
   return {
     ipal, units, peruntukan, Qipal, bm, BODin, CODin, TSSin, NH3in, MinyakIn, FCin, Klin,
-    PARAMS, trace, final, bmFor,
+    PARAMS, CUSTOM_PARAMS, trace, final, bmFor,
     sludgeUnits, totalSludgeKgHari, gasUnits, totalGas,
   };
 }
@@ -2189,6 +2415,12 @@ function renderRemovalRecap() {
     .filter(k => PARAM_META[k])
     .map(k => ({ key:k, ...PARAM_META[k] }));
 
+  // ── Custom (manual) parameters added by the user ──
+  const CUSTOM_PARAMS = removalCustomParams.map(c => ({
+    key: c.key, label: c.label || '(Nama parameter)', unit: c.unit || '-',
+    infKey: c.key, canInput: true, isCustom: true, customBm: c.bm, customBmNote: c.bmNote,
+  }));
+
   // ── Build CSS ──
   // Cols: No | Param | Unit | Influent | [% Removal + Keluar] per unit | Outlet | BM
   const nUnits = units.length;
@@ -2198,7 +2430,7 @@ function renderRemovalRecap() {
     const colPct = 4 + ui*2;
     const colOut = 5 + ui*2;
     const def = REMOVAL_EFF[(ipal.units.find(u=>u.id===uid)||{}).type] || {};
-    const presets = Array.isArray(def[param]) ? def[param] : [];
+    const presets = getParamPresets(uid, param);
     const curPct = getParamPct(uid, param);
     const klorinAdd = def.klorin_add || 0;
 
@@ -2258,6 +2490,7 @@ function renderRemovalRecap() {
 
   // ── Compute cumulative outputs ──
   const DeterjenIn = parseFloat((removalInfluent.Deterjen||'').replace(',','.'));
+  const customKeys = removalCustomParams.map(c => c.key);
   function calcCumul() {
     let cur = {
       BOD:         isNaN(BODin)      ? null : BODin,
@@ -2269,11 +2502,15 @@ function renderRemovalRecap() {
       FC:          FCin,
       Klorin:      Klin,
     };
+    customKeys.forEach(k => {
+      const v = parseFloat((removalInfluent[k]||'').replace(',','.'));
+      cur[k] = isNaN(v) ? null : v;
+    });
     const trace = [];
     units.forEach(u => {
       const entry = {};
       const def = REMOVAL_EFF[u.type] || {};
-      ['BOD','COD','TSS','NH3','Deterjen','MinyakLemak','FC','Klorin'].forEach(p => {
+      ['BOD','COD','TSS','NH3','Deterjen','MinyakLemak','FC','Klorin', ...customKeys].forEach(p => {
         const inVal = cur[p];
         const pct = getParamPct(u.id, p);
         const kAdd = (p==='Klorin') ? getKlorinDose(u.id, def) : 0;
@@ -2301,7 +2538,7 @@ function renderRemovalRecap() {
     thead += `<th colspan="2" class="unit-hd" data-col="${4+ui*2}" style="min-width:180px;">${UL[u.type]||u.type}</th>`;
   });
   thead += `<th rowspan="2" class="outlet-hd" data-col="${4+nUnits*2}">OUTLET<br>IPAL</th>`;
-  if(bm) thead += `<th rowspan="2" class="bm-hd" data-col="${5+nUnits*2}">BMAL</th>`;
+  if(bm || CUSTOM_PARAMS.length) thead += `<th rowspan="2" class="bm-hd" data-col="${5+nUnits*2}">BMAL</th>`;
   thead += `</tr><tr>`;
   units.forEach((u, ui) => {
     thead += `<th class="rem-subhd" data-col="${4+ui*2}">% Removal<br><small style="font-weight:400;color:#aaa;">(referensi / manual)</small></th><th class="rem-subhd" data-col="${5+ui*2}">Keluar</th>`;
@@ -2311,7 +2548,7 @@ function renderRemovalRecap() {
   // ── Build body rows ──
   let tbody = '<tbody>';
 
-  PARAMS.forEach((param, pi) => {
+  function buildRow(param, pi) {
     // Influent cell
     let infCell = '';
     if(param.qualOnly) {
@@ -2357,7 +2594,17 @@ function renderRemovalRecap() {
 
     // BM cell
     let bmCell = '';
-    if(bm) {
+    if(param.isCustom) {
+      const outNum = parseFloat(String(outletDisp).replace(',','.').replace(/[^0-9.]/g,''));
+      if(param.customBm !== null && param.customBm !== undefined) {
+        const ok = !isNaN(outNum) && outNum <= param.customBm;
+        const fail = !isNaN(outNum) && outNum > param.customBm;
+        bmCell = `<span class="${ok?'rem-ok':fail?'rem-fail':''}">≤ ${param.customBm}${ok?' ✓':fail?' ✗':''}</span>`;
+        if(param.customBmNote) bmCell += `<br><small style="color:#888;">${escH(param.customBmNote)}</small>`;
+      } else {
+        bmCell = '<span style="color:#ccc;">—</span>';
+      }
+    } else if(bm) {
       const bmParams = bm.params || [];
       const bmP = bmParams.find(p=>p.p===param.key);
       if(bmP) {
@@ -2377,16 +2624,57 @@ function renderRemovalRecap() {
       } else { bmCell = '<span style="color:#ccc;">—</span>'; }
     }
 
-    tbody += `<tr>
+    // Parameter name cell — editable for custom params
+    let paramCell;
+    if(param.isCustom) {
+      const cp = removalCustomParams.find(c=>c.key===param.key);
+      const isLib = !!(cp && cp.libKey);
+      if(isLib) {
+        paramCell = `
+          <div style="display:flex;align-items:flex-start;gap:4px;">
+            <div style="flex:1;min-width:0;">
+              <b>${escH(cp.label)}</b>
+              <div style="font-size:0.66rem;color:#0891b2;margin-top:1px;">📚 Referensi literatur</div>
+            </div>
+            <button onclick="removeCustomRemovalParam('${param.key}')" title="Hapus parameter ini"
+              style="border:none;background:#fee2e2;color:#b91c1c;border-radius:4px;width:20px;height:20px;line-height:1;cursor:pointer;font-size:0.75rem;flex-shrink:0;">✕</button>
+          </div>`;
+      } else {
+        paramCell = `
+          <input id="rmcustlbl_${param.key}" class="rem-input" type="text" value="${escH(cp?.label||'')}"
+            placeholder="Nama parameter" style="width:100%;min-width:110px;font-weight:600;margin-top:0;"
+            onchange="updateCustomRemovalParam('${param.key}','label',this.value)" title="Nama parameter tambahan">
+          <div style="display:flex;gap:4px;margin-top:3px;align-items:center;">
+            <input class="rem-input" type="text" value="${escH(cp?.unit||'')}"
+              placeholder="satuan" style="width:52px;margin-top:0;font-size:0.68rem;"
+              onchange="updateCustomRemovalParam('${param.key}','unit',this.value)" title="Satuan">
+            <button onclick="removeCustomRemovalParam('${param.key}')" title="Hapus parameter ini"
+              style="border:none;background:#fee2e2;color:#b91c1c;border-radius:4px;width:20px;height:20px;line-height:1;cursor:pointer;font-size:0.75rem;flex-shrink:0;">✕</button>
+          </div>`;
+      }
+    } else {
+      paramCell = `<b>${param.label}</b>`;
+    }
+
+    return `<tr${param.isCustom?' class="rem-custom-row"':''}>
       <td class="rem-freeze-no td-freeze" data-col="0">${pi+1}</td>
-      <td class="rem-freeze-param td-freeze" data-col="1"><b>${param.label}</b></td>
-      <td class="rem-unit-col" data-col="2">${param.unit}</td>
+      <td class="rem-freeze-param td-freeze" data-col="1">${paramCell}</td>
+      <td class="rem-unit-col" data-col="2">${param.isCustom ? '' : param.unit}</td>
       <td class="rem-inf-col" data-col="3">${infCell}</td>
       ${unitCells}
       <td class="rem-outlet-col" data-col="${4+nUnits*2}"><b>${outletDisp}</b></td>
-      ${bm ? `<td class="rem-bm-col" data-col="${5+nUnits*2}">${bmCell}</td>` : ''}
+      ${bm || param.isCustom ? `<td class="rem-bm-col" data-col="${5+nUnits*2}">${
+        param.isCustom
+          ? `<input class="rem-input" type="number" step="any" value="${param.customBm===null||param.customBm===undefined?'':param.customBm}"
+              placeholder="Baku mutu" style="width:64px;margin-top:0;" title="Nilai baku mutu (opsional)"
+              onchange="updateCustomRemovalParam('${param.key}','bm',this.value)"><br>${bmCell}`
+          : bmCell
+      }</td>` : ''}
     </tr>`;
-  });
+  }
+
+  PARAMS.forEach((param, pi) => { tbody += buildRow(param, pi); });
+  CUSTOM_PARAMS.forEach((param, ci) => { tbody += buildRow(param, PARAMS.length + ci); });
 
   tbody += '</tbody>';
 
@@ -2428,6 +2716,18 @@ function renderRemovalRecap() {
         ${thead}
         ${tbody}
       </table>
+    </div>
+    <div style="margin-top:10px;">
+      <div style="display:inline-flex;align-items:center;gap:8px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="color:var(--ink);flex-shrink:0;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <select onchange="addCustomParamFromPicker(this)"
+          style="padding:6px 10px;border-radius:7px;border:1px dashed var(--line);background:var(--card);color:var(--ink);font-size:0.78rem;font-weight:600;cursor:pointer;">
+          <option value="">Tambah Parameter Manual...</option>
+          ${Object.entries(EXTRA_PARAM_LIBRARY).map(([k,v]) => `<option value="${k}">${escH(v.label)}</option>`).join('')}
+          <option value="__free__">✏ Parameter lain (ketik manual)</option>
+        </select>
+      </div>
+      <span style="font-size:0.72rem;color:var(--muted);margin-left:8px;">Pilih parameter di luar baku mutu yang berlaku — % Removal sudah memiliki rekomendasi referensi literatur per unit proses, dapat disesuaikan manual.</span>
     </div>
     <div class="removal-refs">
       ${refText}<br>
@@ -3588,6 +3888,7 @@ function saveFile(){
     removalInfluent:   JSON.parse(JSON.stringify(removalInfluent)),
     removalOverrides:  JSON.parse(JSON.stringify(removalOverrides)),
     klorinDoseOverrides: JSON.parse(JSON.stringify(klorinDoseOverrides)),
+    removalCustomParams: JSON.parse(JSON.stringify(removalCustomParams)),
     paRows: JSON.parse(JSON.stringify(paRows)),
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
@@ -3628,6 +3929,13 @@ function openFile(){
         if(data.removalInfluent)     Object.assign(removalInfluent,     data.removalInfluent);
         if(data.removalOverrides)    Object.assign(removalOverrides,     data.removalOverrides);
         if(data.klorinDoseOverrides) Object.assign(klorinDoseOverrides,  data.klorinDoseOverrides);
+        if(data.removalCustomParams && Array.isArray(data.removalCustomParams)) {
+          removalCustomParams = data.removalCustomParams;
+          removalCustomCounter = removalCustomParams.reduce((mx,c) => {
+            const m = /^custom_(\d+)$/.exec(c.key||'');
+            return m ? Math.max(mx, parseInt(m[1],10)) : mx;
+          }, 0);
+        }
         if(data.paRows && Array.isArray(data.paRows)){
           paRows = data.paRows;
           paRowCounter = Math.max(0, ...paRows.map(r=>r.id));
@@ -38203,13 +38511,15 @@ function cell(text, opts = {}) {
 
 // ── SECTION 3 (LANDSCAPE): Timbulan & Efisiensi Removal — full recap table ──
 function buildRemovalRecapTable(rg) {
-  const { units, PARAMS, trace, final, bm, bmFor, Klin } = rg;
+  const { units, PARAMS, CUSTOM_PARAMS = [], trace, final, bm, bmFor, Klin } = rg;
+  const ALL_PARAMS = [...PARAMS, ...CUSTOM_PARAMS];
+  const hasBmCol = !!bm || CUSTOM_PARAMS.length > 0;
   // Column plan: No | Parameter | Satuan | Influent | [%Removal|Keluar] per unit | Outlet | BMAL
   let fixedCols = [420, 1500, 1000, 1300];
   let perUnitColW = 520; // for % Removal column (vertical header, narrower)
   let perUnitOutW = 620;  // for Keluar column (vertical header, narrower)
   let outletColW = 1100;
-  let bmColW = bm ? 1600 : 0;
+  let bmColW = hasBmCol ? 1600 : 0;
   // Auto-fit to page: landscape A4 usable width ≈ 15038 DXA (900 margin each side).
   // Always scale ALL columns (shrink or grow) so the table exactly fills the
   // available page width regardless of how many process units exist.
@@ -38221,12 +38531,12 @@ function buildRemovalRecapTable(rg) {
   perUnitColW = Math.round(perUnitColW*scale);
   perUnitOutW = Math.round(perUnitOutW*scale);
   outletColW = Math.round(outletColW*scale);
-  bmColW = bm ? Math.round(bmColW*scale) : 0;
+  bmColW = hasBmCol ? Math.round(bmColW*scale) : 0;
   const colWidths = [
     ...fixedCols,
     ...units.flatMap(()=>[perUnitColW, perUnitOutW]),
     outletColW,
-    ...(bm ? [bmColW] : []),
+    ...(hasBmCol ? [bmColW] : []),
   ];
 
   // Header row 1
@@ -38247,7 +38557,7 @@ function buildRemovalRecapTable(rg) {
     }));
   });
   hdrRow1Cells.push(cell('Outlet IPAL', { width:outletColW, bold:true, align:AlignmentType.CENTER, vAlign:VerticalAlign.CENTER, fill:'D9D9D9', size:15, rowSpan:2 }));
-  if(bm) hdrRow1Cells.push(cell('BMAL', { width:bmColW, bold:true, align:AlignmentType.CENTER, vAlign:VerticalAlign.CENTER, fill:'D9D9D9', size:15, rowSpan:2 }));
+  if(hasBmCol) hdrRow1Cells.push(cell('BMAL', { width:bmColW, bold:true, align:AlignmentType.CENTER, vAlign:VerticalAlign.CENTER, fill:'D9D9D9', size:15, rowSpan:2 }));
 
   const hdrRow2Cells = [];
   units.forEach(() => {
@@ -38255,10 +38565,10 @@ function buildRemovalRecapTable(rg) {
     hdrRow2Cells.push(cell('Keluar', { width:perUnitOutW, bold:true, align:AlignmentType.CENTER, vAlign:VerticalAlign.CENTER, fill:'EFEFEF', size:13, textDirection:TextDirection.BOTTOM_TO_TOP_LEFT_TO_RIGHT }));
   });
 
-  const bodyRows = PARAMS.map((param, pi) => {
+  const bodyRows = ALL_PARAMS.map((param, pi) => {
     const rowCells = [
       cell(String(pi+1), { width:fixedCols[0], align:AlignmentType.CENTER, size:15 }),
-      cell(param.label, { width:fixedCols[1], bold:true, size:15 }),
+      cell(param.label + (param.isCustom ? ' (tambahan)' : ''), { width:fixedCols[1], bold:true, size:15 }),
       cell(param.unit, { width:fixedCols[2], align:AlignmentType.CENTER, size:15 }),
     ];
     // Influent cell
@@ -38289,7 +38599,7 @@ function buildRemovalRecapTable(rg) {
         rowCells.push(cell('6–9', { width:perUnitOutW, align:AlignmentType.CENTER, size:15 }));
         return;
       }
-      const tEntry = trace[ui][param.key];
+      const tEntry = trace[ui][param.key] || { pct:0, outVal:null, kAdd:0 };
       const pctTxt = param.key==='Klorin'
         ? (tEntry.kAdd>0 ? `+${fmtID(tEntry.kAdd,2)} mg/L` : '—')
         : `${fmtID(tEntry.pct,1)}%`;
@@ -38311,7 +38621,7 @@ function buildRemovalRecapTable(rg) {
     rowCells.push(cell(outletTxt, { width:outletColW, align:AlignmentType.CENTER, size:15, bold:true }));
 
     // BM cell
-    if(bm) {
+    if(hasBmCol) {
       let bmTxt = '—', bmColor = '000000';
       const bmRes = bmFor(param.key, parseFloat(String(outletTxt).replace(/\./g,'').replace(',','.')));
       if(bmRes) {
@@ -39854,6 +40164,10 @@ let removalOverrides = {};
 let removalInfluent = { TSS:'', NH3:'', Deterjen:'', MinyakLemak:'', FC:'10000', Klorin:'0' };
 // klorinDoseOverrides[uid] = dose (mg/L), for units with klorin_add_presets (e.g. disinfeksi)
 let klorinDoseOverrides = {};
+// User-added extra parameters not covered by the applicable baku mutu.
+// Each: { key, label, unit, bm: number|null, bmNote:string }
+let removalCustomParams = [];
+let removalCustomCounter = 0;
 
 function getKlorinDose(uid, def) {
   if(klorinDoseOverrides[uid] !== undefined) return klorinDoseOverrides[uid];
@@ -39881,21 +40195,35 @@ function applyKlorinDoseManual(uid) {
   renderRemovalRecap();
 }
 
+// Resolve % Removal presets for a given unit + parameter key.
+// For standard params, reads REMOVAL_EFF[type][param]. For custom params tied
+// to a library entry (removalCustomParams[].libKey), reads
+// EXTRA_PARAM_LIBRARY[libKey].removal[type] instead.
+function getParamPresets(uid, param) {
+  const type = (getActiveIpal()?.units.find(u=>u.id===uid)||{}).type;
+  const custom = removalCustomParams.find(c => c.key === param);
+  if(custom) {
+    if(!custom.libKey) return [];
+    const lib = EXTRA_PARAM_LIBRARY[custom.libKey];
+    return (lib && lib.removal && lib.removal[type]) || [];
+  }
+  const def = REMOVAL_EFF[type] || {};
+  return Array.isArray(def[param]) ? def[param] : [];
+}
+
 function getParamPct(uid, param) {
   // Returns pct 0-100; reads manual override first, then first preset
   if(removalOverrides[uid] && removalOverrides[uid][param] !== undefined)
     return removalOverrides[uid][param];
-  const def = REMOVAL_EFF[(getActiveIpal()?.units.find(u=>u.id===uid)||{}).type] || {};
-  const presets = def[param];
-  if(!presets || !Array.isArray(presets) || !presets.length) return 0;
+  const presets = getParamPresets(uid, param);
+  if(!presets.length) return 0;
   return presets[0].pct;
 }
 
 function applyParamPreset(uid, param, idx) {
   const ipal = getActiveIpal(); if(!ipal) return;
   const u = ipal.units.find(x=>x.id===uid); if(!u) return;
-  const def = REMOVAL_EFF[u.type]; if(!def) return;
-  const presets = def[param]; if(!presets || !presets[idx]) return;
+  const presets = getParamPresets(uid, param); if(!presets[idx]) return;
   if(!removalOverrides[uid]) removalOverrides[uid] = {};
   removalOverrides[uid][param] = presets[idx].pct;
   // Update the manual input
@@ -39917,6 +40245,58 @@ function applyInfluent(param) {
   const inp = document.getElementById(`rminf_${param}`);
   if(!inp) return;
   removalInfluent[param] = inp.value;
+  renderRemovalRecap();
+}
+
+// ── CUSTOM (MANUAL) PARAMETERS — Hasil Evaluasi / Removal Recap ──────────
+function addCustomRemovalParam(libKey) {
+  removalCustomCounter++;
+  const key = `custom_${removalCustomCounter}`;
+  const lib = libKey ? EXTRA_PARAM_LIBRARY[libKey] : null;
+  removalCustomParams.push({
+    key,
+    libKey: libKey || null,
+    label: lib ? lib.label : '',
+    unit: lib ? lib.unit : 'mg/L',
+    bm: lib && lib.defaultBm !== null && lib.defaultBm !== undefined ? lib.defaultBm : null,
+    bmNote: '',
+  });
+  removalInfluent[key] = '';
+  renderRemovalRecap();
+  if(!lib) {
+    setTimeout(() => {
+      const inp = document.getElementById(`rmcustlbl_${key}`);
+      if(inp) inp.focus();
+    }, 30);
+  }
+}
+
+function addCustomParamFromPicker(selectEl) {
+  const val = selectEl.value;
+  selectEl.value = ''; // reset picker
+  if(!val) return;
+  addCustomRemovalParam(val === '__free__' ? null : val);
+}
+
+function updateCustomRemovalParam(key, field, value) {
+  const p = removalCustomParams.find(c => c.key === key);
+  if(!p) return;
+  if(field === 'bm') {
+    const v = parseFloat(String(value).replace(',', '.'));
+    p.bm = (value === '' || isNaN(v)) ? null : v;
+  } else {
+    p[field] = value;
+  }
+  renderRemovalRecap();
+}
+
+function removeCustomRemovalParam(key) {
+  if(!confirm('Hapus parameter tambahan ini?')) return;
+  removalCustomParams = removalCustomParams.filter(c => c.key !== key);
+  delete removalInfluent[key];
+  Object.keys(removalOverrides).forEach(uid => {
+    if(removalOverrides[uid]) delete removalOverrides[uid][key];
+  });
   renderRemovalRecap();
 }
 
